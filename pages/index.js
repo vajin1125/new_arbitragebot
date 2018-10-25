@@ -1,12 +1,14 @@
 import { Component } from 'react'
+import { pure } from 'recompose';
 import { Row, Col } from 'antd'
-import { Select, Button, Input, InputNumber, Menu, Icon, Popconfirm, Affix, message } from 'antd'
+import { Select, Button, Input, InputNumber, Menu, Icon, Popconfirm, Affix, message, Spin } from 'antd'
 import PieChart from 'react-minimal-pie-chart'
 import '../assets/css/style.css'
 
 const Option = Select.Option;
 const ButtonGroup = Button.Group;
 const InputGroup = Input.Group;
+const SubMenu = Menu.SubMenu;
 
 const datacollection = {
     BINANCE: [
@@ -19,24 +21,329 @@ const datacollection = {
             'BTC/TRY', 'BTC/USDT', 'ETH/TRY', 'LTC/TRY', 'XRP/TRY', 'USDT/TRY', 'DASH/TRY', 'XLM/TRY', 'BTG/TRY', 'ETC/TRY', 'XEM/TRY', 'DOGE/TRY', 'BCH/TRY'    
         ]
 }
-
+////////////////////////////////      COMPONENT   >>>>>>    //////////////////////////////////////////
+const Menubar = () => (
+    
+    <Affix offsetTop={10}>
+        <Menu
+            selectedKeys={['exchange']}
+            mode="horizontal"
+            theme='dark'>
+            <Menu.Item key="exchange">
+                <a href="/index">
+                    <Icon type="appstore" />Exchange
+                </a>
+            </Menu.Item>                        
+            <Menu.Item key="currency">
+                <a href="/currency">
+                    <Icon type="property-safety" />Currency
+                </a>
+            </Menu.Item>                        
+            <Menu.Item key="parity">
+                <a href="/parity">
+                    <Icon type="stock" />Parity
+                </a>
+            </Menu.Item>
+            <SubMenu style={{float:'right',padding:0}} title={<span className="submenu-title-wrapper"><Icon type="team" style={{fontSize:20}} /></span>}>
+                <Menu.Item key="user:1" style={{margin:0,background:'#00101a'}}><Icon type="user"/>John</Menu.Item>
+                <Menu.Item key="user:2" style={{margin:0,background:'#00101a'}}><Icon type="user"/>Kerry</Menu.Item>
+                <Menu.Item key="user:3" style={{margin:0,background:'#00101a'}}><Icon type="user"/>Volten</Menu.Item>
+            </SubMenu>
+        </Menu>
+    </Affix>
+)
+const Headbar = (props) => (
+    <Row>
+        <Col span={24} style={{padding:3}}>
+            <ButtonGroup>
+                <Button icon="plus" onClick={props.boxadd} disabled={props.selectdisble} />
+                <Popconfirm placement="topLeft" title='Are you sure to delete this box?' onConfirm={() => props.boxremove(props.boxkey)} okText="Yes" cancelText="No">
+                    <Button icon="minus" disabled={props.selectdisble} />
+                </Popconfirm>
+            </ButtonGroup>
+            {/* value={this.state.parities[props.boxkey]} */}            
+            {/* disabled={props.selectdisble} */}
+            <Select value={props.parity} style={{ width:120,float:'right' }} onChange={(e) => props.parityChange(props.boxkey, e)}>
+                {datacollection[props.exchange].map(parity => <Option value={parity} key={parity}>{parity}</Option>)}
+            </Select>
+            {/* value={this.state.exchangeboxes[props.boxkey]} */}
+            {/* disabled={this.state.selectdisble} */}
+            <Select value={props.exchange} style={{ width:120,float:'right',marginRight:3 }} onChange={(e) => props.exchangeChange(props.boxkey, e)}>
+                {
+                    Object.keys(datacollection).map(exchange => (
+                        <Option value={exchange} key={exchange}>{exchange}</Option>        
+                    ))
+                }
+            </Select>
+        </Col>
+    </Row>
+)
+const Contentbar = (props) => {      
+    const EPstate = props.EPstate;
+    if (EPstate) {
+        switch (props.exchange) {
+            case 'BINANCE':
+                var Buydata = () =>
+                    (Object.keys(EPstate.depth.bids).slice(0, 18).map((item, i) => (
+                        <tr className='trrow' key={i}>
+                            <td>{ parseFloat(item).toFixed(2) }</td>
+                            <td>{ parseFloat(EPstate.depth.bids[item]).toFixed(4) }</td>
+                            <td>{ (parseFloat(item).toFixed(2) * parseFloat(EPstate.depth.bids[item]).toFixed(4)).toFixed(2) }</td>
+                        </tr>
+                    )))
+                var Selldata = () =>
+                    (Object.keys(EPstate.depth.asks).slice(0, 18).map((item, i) => (
+                        <tr className='trrow' key={i}>
+                            <td>{ parseFloat(item).toFixed(2) }</td>
+                            <td>{ parseFloat(EPstate.depth.asks[item]).toFixed(4) }</td>
+                            <td>{ (parseFloat(item).toFixed(2) * parseFloat(EPstate.depth.asks[item]).toFixed(4)).toFixed(2) }</td>
+                        </tr>
+                    )))
+                if (Object.keys(EPstate.history).length===0 && EPstate.history.constructor===Object) {
+                    var Historydata = () => <tr><td colSpan='3'><Icon type="dollar" style={{ fontSize:20,color:'#888' }} spin/>So Lazy</td></tr>;
+                } else {
+                    var Historydata = () =>
+                        (EPstate.history.map((item, i) => (
+                            <tr className='trrow' key={i}>
+                                <td>{ parseFloat(item.p).toFixed(2) }</td>
+                                <td>{ parseFloat(item.q).toFixed(4) }</td>
+                                <td>{ (new Date(item.T*1000)).getHours()+':'+(new Date(item.T*1000)).getMinutes()+':'+(new Date(item.T*1000)).getSeconds() }</td>
+                            </tr>                                                        
+                        )))
+                }
+                break;
+            case 'BTCTURK':
+                var Buydata = () => 
+                    (EPstate.bids.slice(0, 18).map((item, i) => (
+                        <tr className='trrow' key={i}>
+                            <td>{ parseFloat(item[0]).toFixed(2) }</td>
+                            <td>{ parseFloat(item[1]).toFixed(4) }</td>
+                            <td>{ (parseFloat(item[0]).toFixed(2) * parseFloat(item[1]).toFixed(4)).toFixed(2) }</td>
+                        </tr>                                                        
+                    )))
+                var Selldata = () => 
+                    (EPstate.asks.slice(0, 18).map((item, i) => (
+                        <tr className='trrow' key={i}>
+                            <td>{ parseFloat(item[0]).toFixed(2) }</td>
+                            <td>{ parseFloat(item[1]).toFixed(4) }</td>
+                            <td>{ (parseFloat(item[0]).toFixed(2) * parseFloat(item[1]).toFixed(4)).toFixed(2) }</td>
+                        </tr>                                                        
+                    )))
+                var Historydata = () =>
+                    (props.EPsh.map((item, i) => (
+                        <tr className='trrow' key={i}>
+                            <td>{ parseFloat(item.price).toFixed(2) }</td>
+                            <td>{ parseFloat(item.amount).toFixed(4) }</td>
+                            <td>{ (new Date(item.date)).getHours()+':0'+(new Date(item.date)).getMinutes()+':0'+(new Date(item.date)).getSeconds() }</td>
+                        </tr>                                                        
+                    )))
+                break;
+            case 'KOINEKS':                
+                let a = props.parity;
+                let b = a.split('/');
+                let c = b[0];
+                var Buydata = () =>
+                    <tr className='trrow'>
+                        <td>{ parseFloat(EPstate[c].bid).toFixed(2) }</td>
+                        <td>{ parseFloat(EPstate[c].change_amount).toFixed(4) }</td>
+                        <td>{ (parseFloat(EPstate[c].bid).toFixed(2)*parseFloat(EPstate[c].change_amount)).toFixed(2) }</td>
+                    </tr>
+                var Selldata = () =>
+                    <tr className='trrow'>
+                        <td>{ parseFloat(EPstate[c].ask).toFixed(2) }</td>
+                        <td>{ parseFloat(EPstate[c].change_amount).toFixed(4) }</td>
+                        <td>{ (parseFloat(EPstate[c].ask).toFixed(2)*parseFloat(EPstate[c].change_amount)).toFixed(2) }</td>
+                    </tr>
+                var Historydata = () => <tr><td colSpan='3'>No History Data</td></tr>;
+                break;
+        }
+    } else {
+        var Buydata = () => <tr><td colSpan='3'><Icon type="dollar" style={{ fontSize:20,color:'#888' }} spin/></td></tr>;
+        var Selldata = Buydata;
+        var Historydata = Buydata;    
+    }
+    return (
+        <Row gutter={3} style={{padding:'0 3px'}}>
+            <Col span={8}>
+                <div style={{height:400,border:'solid #EEE 1px',textAlign:'center'}}>
+                    <div style={{padding:'4px 0',borderBottom:'solid #1890ff 1px',color:'#1890ff'}}>
+                        <Icon type="fork" theme="outlined" style={{marginRight:5}} />Buy Orders
+                    </div>
+                    <div style={{height:370,overflow:'auto'}}>
+                        <table cellPadding='0' cellSpacing='0'>
+                            <tbody>
+                                <tr className='trrow head'><td>Price</td><td>Amout</td><td>Total</td></tr>
+                                <Buydata />
+                                <tr><td colSpan='3'></td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </Col>
+            <Col span={8}>
+                <div style={{height:400,border:'solid #EEE 1px',textAlign:'center'}}>
+                    <div style={{padding:'4px 0',borderBottom:'solid #1890ff 1px',color:'#1890ff'}}>
+                        <Icon type="fork" theme="outlined" style={{marginRight:5}} />Sell Orders
+                    </div>
+                    <div style={{height:370,overflow:'auto'}}>
+                        <table cellPadding='0' cellSpacing='0'>
+                            <tbody>
+                                <tr className='trrow head'><td>Price</td><td>Amout</td><td>Total</td></tr>
+                                <Selldata />
+                                <tr><td colSpan='3'></td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </Col>
+            <Col span={8}>
+                <div style={{height:400,border:'solid #EEE 1px',textAlign:'center'}}>
+                    <div style={{padding:'4px 0',borderBottom:'solid #1890ff 1px',color:'#1890ff'}}>
+                        <Icon type="fork" theme="outlined" style={{marginRight:5}} />Order History
+                    </div>
+                    <div style={{height:370,overflow:'auto'}}>
+                        <table cellPadding='0' cellSpacing='0'>
+                            <tbody>
+                                <tr className='trrow head'><td>Price</td><td>Amout</td><td>Time</td></tr>
+                                <Historydata />
+                                <tr><td colSpan='3'></td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </Col>
+        </Row>
+    )
+}
+const Chartbar = (props) => {
+    const EPstate = props.EPstate;
+    if (EPstate) {
+        const piecolors = ['#ff7202', '#5ca536'];
+        switch (props.exchange) {
+            case 'BINANCE':
+                var Piechart = () => <Pie
+                    data={ [5000, parseFloat(Object.keys(EPstate.depth.bids)[0])] }
+                    radius={ 60 }
+                    hole={ 0 }
+                    colors={ piecolors }
+                    strokeWidth={ 3 }
+                    labels={ true }
+                />
+                break;
+            case 'BTCTURK':
+                var Piechart = () => <Pie
+                    data={ [5000, parseFloat(EPstate.bids[0][0])] }
+                    radius={ 60 }
+                    hole={ 0 }
+                    colors={ piecolors }
+                    strokeWidth={ 3 }
+                    labels={ true }
+                />
+                break;
+            case 'KOINEKS':
+                let a = props.parity;
+                let b = a.split('/');
+                let c = b[0];
+                var Piechart = () => <Pie
+                    data={ [5000, parseFloat(EPstate[c].bid)] }
+                    radius={ 60 }
+                    hole={ 0 }
+                    colors={ piecolors }
+                    strokeWidth={ 3 }
+                    labels={ true }
+                />
+                break;
+            default:
+                var Piechart = () => <Icon type="dollar" style={{ fontSize:20,color:'#888',marginTop:50 }} spin/>;
+        }
+    } else {
+        var Piechart = () => <Icon type="dollar" style={{ fontSize:20,color:'#888',marginTop:50 }} spin/>;
+    }
+    return (
+        <Row style={{padding:'20px 0'}}>
+            <Col span={7} style={{textAlign:'center'}}>
+                <Piechart />
+            </Col>
+            <Col span={11}>
+                <ul style={{height:27,marginBottom:0}}>
+                    <li style={{width:'50%',float:'left',whiteSpace:'nowrap',overflow:'hidden',textOverflow:'ellipsis'}}>
+                        balance warning
+                    </li>
+                    <li style={{width:'50%',float:'left'}}>
+                    <InputNumber
+                        defaultValue={100}
+                        formatter={value => `$ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
+                        parser={value => value.replace(/\$\s?|(,*)/g, '')}
+                        style={{width:'100%'}}
+                        size='small'
+                        onChange={(e) => this.balanceChange(props.boxkey, e)}
+                    />    
+                    </li>
+                </ul>
+                <ul style={{height:27,marginBottom:0}}>
+                    <li style={{width:'50%',float:'left',whiteSpace:'nowrap',overflow:'hidden',textOverflow:'ellipsis'}}>
+                        ratio warning %
+                    </li>
+                    <li style={{width:'50%',float:'left'}}>
+                    <InputNumber
+                        defaultValue={1.5}
+                        min={0}
+                        max={100}
+                        formatter={value => `${value}%`}
+                        parser={value => value.replace('%', '')}
+                        step={.1}
+                        style={{width:'100%'}}
+                        size='small'
+                        onChange={(e) => this.ratioChange(props.boxkey, e)}
+                        key='special'
+                    />
+                    </li>
+                </ul>
+                <ul style={{height:27,marginBottom:0}}>
+                    <li style={{width:'50%',float:'left',whiteSpace:'nowrap',overflow:'hidden',textOverflow:'ellipsis'}}>
+                        API key
+                    </li>
+                    <li style={{width:'50%',float:'left'}}>
+                        <Input size='small'/>
+                    </li>
+                </ul>
+                <ul style={{height:27,marginBottom:0}}>
+                    <li style={{width:'50%',float:'left',whiteSpace:'nowrap',overflow:'hidden',textOverflow:'ellipsis'}}>
+                        Secret key
+                    </li>
+                    <li style={{width:'50%',float:'left'}}>
+                        <Input size='small'/>
+                    </li>
+                </ul>
+                <InputGroup compact>
+                    <Input placeholder={props.parity.split('/')[0] + ' key'} style={{width:'50%'}}/>
+                    <Input placeholder={props.parity.split('/')[1] + ' key'} style={{width:'50%'}}/>
+                </InputGroup>
+            </Col>
+            <Col span={6}>
+                <PieChart style={{width:'55%',margin:'auto'}}
+                    data={[                                                                                                            
+                        { title: 'One', value: 8, color: '#006fc1' },
+                        { title: 'Three', value: 10, color: '#ffc103' },
+                ]} />
+            </Col>
+        </Row>
+    )
+}
+////////////////////////////////  COMPONENT   <<<<<<       //////////////////////////////////////////
 export default class extends Component {
     state = {
-        affixtop : 10,
-        menukey: 'exchange',
+        // affixtop : 10,
+        // menukey: 'exchange',
         selectdisble: true,
 
-        // Initial One
+        // Initial
         exchangeboxes: ['BINANCE'],
         parities: ['BTC/USDT'],
         balances: [100],
-        ratios: [1.5],
-
-        piedata: [[5000, 5000]],
-        piecolors: ['#ff7202', '#5ca536']
+        ratios: [1.5]
     }
-    boxadd = () => {
-        message.success('A new box created.');
+    boxadd = () => {        
         var T = this.state.exchangeboxes;
         var P = this.state.parities;
         var isNew = false;
@@ -62,11 +369,7 @@ export default class extends Component {
             balances: B,
             ratios: R
         })
-        let C = this.state.piedata;
-        C.push([5000, 5000]);
-        this.setState({
-            piedata: C
-        })
+        message.success('A new box created.');
     }
     boxremove = (boxkey) => {        
         let T = this.state.exchangeboxes;
@@ -81,14 +384,11 @@ export default class extends Component {
         B.splice(boxkey, 1);
         let R = this.state.ratios;
         R.splice(boxkey, 1);
-        let C = this.state.piedata;
-        C.splice(boxkey, 1);
         this.setState({
             exchangeboxes: T,
             parities: P,
             balances: B,
-            ratios: R,
-            piedata: C
+            ratios: R
         })
         message.success('The selected box removed.');
     }
@@ -187,25 +487,6 @@ export default class extends Component {
         let array = [];
         for (let i=0; i<this.state.exchangeboxes.length; i++) {
             array.push({[this.state.exchangeboxes[i]]: this.state.parities[i]});
-            ////
-            let parity = this.state.parities[i].replace('/', '_');
-            let T = this.state.piedata;
-            switch (this.state.exchangeboxes[i]) {
-                case 'BINANCE':                    
-                    T[i] = [5000, parseFloat(Object.keys(this.state['BINANCE' + parity].depth.bids)[7])];
-                    break;
-                case 'BTCTURK':
-                    T[i] = [5000, parseFloat(this.state['BTCTURK' + parity].bids[7][0])];
-                    break;
-                case 'KOINEKS':
-                    let a = parity.split('_');
-                    let b = a[0];
-                    T[i] = [5000, parseFloat(this.state['KOINEKS' + parity][b].bid)];
-                    break;
-            }
-            this.setState({
-                piedata: T
-            })
         }
         let uniquearray = [];
         for (let item of array) {
@@ -272,7 +553,7 @@ export default class extends Component {
             ['BTCTURK' + datacollection['BTCTURK'][0].replace('/', '_')]: data2,
             ['BTCTURK' + datacollection['BTCTURK'][0].replace('/', '_') + 'history']: data3,
             ['KOINEKS' + datacollection['KOINEKS'][0].replace('/', '_')]: data4
-        }))
+        }))        
         .catch((error) => {
             console.error(error);
         })
@@ -280,13 +561,13 @@ export default class extends Component {
         // https://www.btcturk.com/api/orderbook?pairSymbol=BTCTRY
         // https://www.btcturk.com/api/trades?pairSymbol=BTCTRY&last=18
         // https://cors.io/?https://koineks.com/ticker
-        this.timer = setInterval(() => this.fiveInterval(), 5000) 
+        this.timer = setInterval(() => this.fiveInterval(), 5000)
     }
     componentDidUpdate = () => {
         if (this.state.selectdisble)
             this.setState({
-                selectdisble: false
-            })
+                selectdisble: false,
+            });
     }
     componentWillUnmount = () => {
         clearInterval(this.timer);
@@ -297,304 +578,31 @@ export default class extends Component {
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////    
     render() {        
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-/////////////////////////////////////////////////                COMPONENTS DEFINITION                  ////////////////////////////////////////////////////
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-//  MENU BAR  //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        const Menubar = () => (
-            <Affix offsetTop={this.state.affixtop}>
-                <Menu
-                    selectedKeys={[this.state.menukey]}
-                    mode="horizontal"
-                    theme='dark'>
-                    <Menu.Item key="exchange">
-                        <a href="/index">
-                            <Icon type="appstore" />Exchange{this.state.TEST}
-                        </a>
-                    </Menu.Item>                        
-                    <Menu.Item key="currency">
-                        <a href="/currency">
-                            <Icon type="property-safety" />Currency
-                        </a>
-                    </Menu.Item>                        
-                    <Menu.Item key="parity">
-                        <a href="/parity">
-                            <Icon type="stock" />Parity
-                        </a>
-                    </Menu.Item>
-                </Menu>
-            </Affix>
-        )
-//  HEAD COMPONENT  //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        const Headbar = props => (
-            <Row>
-                <Col span={24} style={{padding:3}}>
-                    <ButtonGroup>
-                        <Button icon="plus" onClick={this.boxadd} disabled={this.state.selectdisble} />
-                        <Popconfirm placement="topLeft" title='Are you sure to delete this box?' onConfirm={() => this.boxremove(props.boxkey)} okText="Yes" cancelText="No">
-                            <Button icon="minus" disabled={this.state.selectdisble} />
-                        </Popconfirm>
-                    </ButtonGroup>
-                    <Select value={this.state.parities[props.boxkey]} style={{ width:120,float:'right' }} onChange={(e) => this.parityChange(props.boxkey, e)} disabled={this.state.selectdisble}>
-                        {datacollection[props.exchange].map(parity => <Option key={parity}>{parity}</Option>)}
-                    </Select>
-                    <Select value={this.state.exchangeboxes[props.boxkey]} style={{ width:120,float:'right',marginRight:3 }} onChange={(e) => this.exchangeChange(props.boxkey, e)} disabled={this.state.selectdisble}>
-                        {
-                            Object.keys(datacollection).map(exchange => (
-                                <Option value={exchange} key={exchange}>{exchange}</Option>        
-                            ))
-                        }
-                    </Select>
-                </Col>
-            </Row>
-        )
-//  CONTENT COMPONENT  //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        const Contentbar = props => {      
-            const EP = props.exchange + this.state.parities[props.boxkey].replace('/', '_');
-            if (this.state[EP]) {
-                if (props.exchange == 'BINANCE') {
-                    var Buydata = () =>
-                        (Object.keys(this.state[EP].depth.bids).slice(0, 18).map((item, i) => (
-                            <tr className='trrow' key={i}>
-                                <td>{ parseFloat(item).toFixed(2) }</td>
-                                <td>{ parseFloat(this.state[EP].depth.bids[item]).toFixed(4) }</td>
-                                <td>{ (parseFloat(item).toFixed(2) * parseFloat(this.state[EP].depth.bids[item]).toFixed(4)).toFixed(2) }</td>
-                            </tr>
-                        )))
-                    var Selldata = () =>
-                        (Object.keys(this.state[EP].depth.asks).slice(0, 18).map((item, i) => (
-                            <tr className='trrow' key={i}>
-                                <td>{ parseFloat(item).toFixed(2) }</td>
-                                <td>{ parseFloat(this.state[EP].depth.asks[item]).toFixed(4) }</td>
-                                <td>{ (parseFloat(item).toFixed(2) * parseFloat(this.state[EP].depth.asks[item]).toFixed(4)).toFixed(2) }</td>
-                            </tr>
-                        )))
-                    if (Object.keys(this.state[EP].history).length===0 && this.state[EP].history.constructor===Object) {
-                        var Historydata = () => <tr><td colSpan='3'><Icon type="loading-3-quarters" style={{ fontSize:20,color:'#888' }} spin/>So Lazy</td></tr>;
-                    } else {
-                        var Historydata = () =>
-                            (this.state[EP].history.map((item, i) => (
-                                <tr className='trrow' key={i}>
-                                    <td>{ parseFloat(item.p).toFixed(2) }</td>
-                                    <td>{ parseFloat(item.q).toFixed(4) }</td>
-                                    <td>{ (new Date(item.T*1000)).getHours()+':'+(new Date(item.T*1000)).getMinutes()+':'+(new Date(item.T*1000)).getSeconds() }</td>
-                                </tr>                                                        
-                            )))
-                    }
-                } else if (props.exchange == 'BTCTURK') {
-                    var Buydata = () => 
-                        (this.state[EP].bids.slice(0, 18).map((item, i) => (
-                            <tr className='trrow' key={i}>
-                                <td>{ parseFloat(item[0]).toFixed(2) }</td>
-                                <td>{ parseFloat(item[1]).toFixed(4) }</td>
-                                <td>{ (parseFloat(item[0]).toFixed(2) * parseFloat(item[1]).toFixed(4)).toFixed(2) }</td>
-                            </tr>                                                        
-                        )))
-                    var Selldata = () => 
-                        (this.state[EP].asks.slice(0, 18).map((item, i) => (
-                            <tr className='trrow' key={i}>
-                                <td>{ parseFloat(item[0]).toFixed(2) }</td>
-                                <td>{ parseFloat(item[1]).toFixed(4) }</td>
-                                <td>{ (parseFloat(item[0]).toFixed(2) * parseFloat(item[1]).toFixed(4)).toFixed(2) }</td>
-                            </tr>                                                        
-                        )))
-                    var Historydata = () =>
-                        (this.state[EP + 'history'].map((item, i) => (
-                            <tr className='trrow' key={i}>
-                                <td>{ parseFloat(item.price).toFixed(2) }</td>
-                                <td>{ parseFloat(item.amount).toFixed(4) }</td>
-                                <td>{ (new Date(item.date)).getHours()+':0'+(new Date(item.date)).getMinutes()+':0'+(new Date(item.date)).getSeconds() }</td>
-                            </tr>                                                        
-                        )))
-                } else if (props.exchange == 'KOINEKS') {
-                    let a = this.state.parities[props.boxkey];
-                    let b = a.split('/');
-                    let c = b[0];
-                    var Buydata = () =>
-                        <tr className='trrow'>
-                            <td>{ parseFloat(this.state[EP][c].bid).toFixed(2) }</td>
-                            <td>{ parseFloat(this.state[EP][c].change_amount).toFixed(4) }</td>
-                            <td>{ (parseFloat(this.state[EP][c].bid).toFixed(2)*parseFloat(this.state[EP][c].change_amount)).toFixed(2) }</td>
-                        </tr>
-                    var Selldata = () =>
-                        <tr className='trrow'>
-                            <td>{ parseFloat(this.state[EP][c].ask).toFixed(2) }</td>
-                            <td>{ parseFloat(this.state[EP][c].change_amount).toFixed(4) }</td>
-                            <td>{ (parseFloat(this.state[EP][c].ask).toFixed(2)*parseFloat(this.state[EP][c].change_amount)).toFixed(2) }</td>
-                        </tr>
-                    var Historydata = () => <tr><td colSpan='3'>No History Data</td></tr>;
-                }
-            } else {
-                var Buydata = () => <tr><td colSpan='3'><Icon type="loading-3-quarters" style={{ fontSize:20,color:'#888' }} spin/></td></tr>;
-                var Selldata = Buydata;
-                var Historydata = Buydata;    
-            }
-            return (
-                <Row gutter={3} style={{padding:'0 3px'}}>
-                    <Col span={8}>
-                        <div style={{height:400,border:'solid #EEE 1px',textAlign:'center'}}>
-                            <div style={{padding:'4px 0',borderBottom:'solid #1890ff 1px',color:'#1890ff'}}>
-                                <Icon type="fork" theme="outlined" style={{marginRight:5}} />Buy Orders
-                            </div>
-                            <div style={{height:370,overflow:'auto'}}>
-                                <table cellPadding='0' cellSpacing='0'>
-                                    <tbody>
-                                        <tr className='trrow head'><td>Price</td><td>Amout</td><td>Total</td></tr>
-                                        <Buydata />
-                                        <tr><td colSpan='3'></td></tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                    </Col>
-                    <Col span={8}>
-                        <div style={{height:400,border:'solid #EEE 1px',textAlign:'center'}}>
-                            <div style={{padding:'4px 0',borderBottom:'solid #1890ff 1px',color:'#1890ff'}}>
-                                <Icon type="fork" theme="outlined" style={{marginRight:5}} />Sell Orders
-                            </div>
-                            <div style={{height:370,overflow:'auto'}}>
-                                <table cellPadding='0' cellSpacing='0'>
-                                    <tbody>
-                                        <tr className='trrow head'><td>Price</td><td>Amout</td><td>Total</td></tr>
-                                        <Selldata />
-                                        <tr><td colSpan='3'></td></tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                    </Col>
-                    <Col span={8}>
-                        <div style={{height:400,border:'solid #EEE 1px',textAlign:'center'}}>
-                            <div style={{padding:'4px 0',borderBottom:'solid #1890ff 1px',color:'#1890ff'}}>
-                                <Icon type="fork" theme="outlined" style={{marginRight:5}} />Order History
-                            </div>
-                            <div style={{height:370,overflow:'auto'}}>
-                                <table cellPadding='0' cellSpacing='0'>
-                                    <tbody>
-                                        <tr className='trrow head'><td>Price</td><td>Amout</td><td>Time</td></tr>
-                                        <Historydata />
-                                        <tr><td colSpan='3'></td></tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                    </Col>
-                </Row>
-            )
-        }
-//  BOTTOM COMPONENT  //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        const Chartbar = props => {
-            if (this.state.piedata)
-                var Piechart = () => <Pie
-                                        data={ this.state.piedata[props.boxkey] }
-                                        radius={ 60 }
-                                        hole={ 0 }
-                                        colors={ this.state.piecolors }
-                                        strokeWidth={ 3 }
-                                        labels={ true }
-                                    />
-            else
-                var Piechart = () => '';
-            return (
-                <Row style={{padding:'20px 0'}}>
-                    <Col span={7} style={{textAlign:'center'}}>
-                        <Piechart />
-                    </Col>
-                    <Col span={11}>
-                        <ul style={{height:27,marginBottom:0}}>
-                            <li style={{width:'50%',float:'left',whiteSpace:'nowrap',overflow:'hidden',textOverflow:'ellipsis'}}>
-                                balance warning
-                            </li>
-                            <li style={{width:'50%',float:'left'}}>
-                            <InputNumber
-                                value={this.state.balances[props.boxkey]}
-                                formatter={value => `$ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
-                                parser={value => value.replace(/\$\s?|(,*)/g, '')}
-                                style={{width:'100%'}}
-                                size='small'
-                                onChange={(e) => this.balanceChange(props.boxkey, e)}
-                            />    
-                            </li>
-                        </ul>
-                        <ul style={{height:27,marginBottom:0}}>
-                            <li style={{width:'50%',float:'left',whiteSpace:'nowrap',overflow:'hidden',textOverflow:'ellipsis'}}>
-                                ratio warning %
-                            </li>
-                            <li style={{width:'50%',float:'left'}}>
-                            <InputNumber
-                                value={this.state.ratios[props.boxkey]}
-                                min={0}
-                                max={100}
-                                formatter={value => `${value}%`}
-                                parser={value => value.replace('%', '')}
-                                step={.1}
-                                style={{width:'100%'}}
-                                size='small'
-                                onChange={(e) => this.ratioChange(props.boxkey, e)}
-                            />
-                            </li>
-                        </ul>
-                        <ul style={{height:27,marginBottom:0}}>
-                            <li style={{width:'50%',float:'left',whiteSpace:'nowrap',overflow:'hidden',textOverflow:'ellipsis'}}>
-                                API key
-                            </li>
-                            <li style={{width:'50%',float:'left'}}>
-                                <Input size='small'/>
-                            </li>
-                        </ul>
-                        <ul style={{height:27,marginBottom:0}}>
-                            <li style={{width:'50%',float:'left',whiteSpace:'nowrap',overflow:'hidden',textOverflow:'ellipsis'}}>
-                                Secret key
-                            </li>
-                            <li style={{width:'50%',float:'left'}}>
-                                <Input size='small'/>
-                            </li>
-                        </ul>
-                        <InputGroup compact>
-                            <Input placeholder={this.state.parities[props.boxkey].split('/')[0] + ' key'} style={{width:'50%'}}/>
-                            <Input placeholder={this.state.parities[props.boxkey].split('/')[1] + ' key'} style={{width:'50%'}}/>
-                        </InputGroup>
-                    </Col>
-                    <Col span={6}>
-                        <PieChart style={{width:'55%',margin:'auto'}}
-                            data={[                                                                                                            
-                                { title: 'One', value: 8, color: '#006fc1' },
-                                { title: 'Three', value: 10, color: '#ffc103' },
-                        ]} />
-                    </Col>
-                </Row>
-            )
-        }
-//  EXCHANGE BOX  //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        const Exchangebox = props => (
-            <Col span={8} className="exchangebox">
-                <div>
-                    <Headbar exchange={props.exchange} boxkey={props.boxkey} />
-                    <Contentbar exchange={props.exchange} boxkey={props.boxkey} />
-                    <Chartbar exchange={props.exchange} boxkey={props.boxkey} />
-                </div>
-            </Col>
-        )
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-////////////////////////////////////////////////                REURN VIEW                  ////////////////////////////////////////////////////////////////
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         return (                
             <div style={{padding:10}}>
                 <Row>
-                    <Menubar />
+                    <Menubar current='exchange'/>
                 </Row>
                 <Row gutter={6} style={{paddingTop:5}}>
                     {
                         this.state.exchangeboxes.map((box, i) => (
-                            <Exchangebox key={i} exchange={box} boxkey={i}/>    
+                            <Exchangebox                                
+                                key={i}
+                                // value props
+                                boxkey         = {i}
+                                exchange       = {box}
+                                parity         = {this.state.parities[i]}
+                                EPstate        = {this.state[box + this.state.parities[i].replace('/', '_')]}
+                                EPsh           = {this.state[box + this.state.parities[i].replace('/', '_') + 'history']}
+                                // action props
+                                boxadd         = {this.boxadd}
+                                boxremove      = {this.boxremove}
+                                parityChange   = {this.parityChange}
+                                exchangeChange = {this.exchangeChange}
+                            />
                         ))
                     }
-                </Row>                
+                </Row>
             </div>
           )
       }
@@ -603,6 +611,39 @@ export default class extends Component {
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////                PIE CHART                  ////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+class Exchangebox extends React.Component {
+    render() {
+        return (
+            <Col span={8} className="exchangebox">
+                <div>
+                    <Headbar
+                        boxkey         = {this.props.boxkey}
+                        exchange       = {this.props.exchange}
+                        parity         = {this.props.parity}
+                        // action props
+                        boxadd         = {this.props.boxadd}
+                        boxremove      = {this.props.boxremove}
+                        parityChange   = {this.props.parityChange}
+                        exchangeChange = {this.props.exchangeChange}
+                    />
+                    <Contentbar
+                        boxkey   = {this.props.boxkey}
+                        exchange = {this.props.exchange}
+                        parity   = {this.props.parity}
+                        EPstate  = {this.props.EPstate}
+                        EPsh     = {this.props.EPsh}
+                    />
+                    <Chartbar
+                        boxkey   = {this.props.boxkey}
+                        exchange = {this.props.exchange}
+                        parity   = {this.props.parity}
+                        EPstate  = {this.props.EPstate}
+                    />
+                </div>
+            </Col>
+        )
+    }
+}
 function getAnglePoint(startAngle, endAngle, radius, x, y) {
 	var x1, y1, x2, y2;
 
