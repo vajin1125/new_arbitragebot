@@ -2543,17 +2543,17 @@ exports.PhoneTwoTone = getIcon('phone', twotone, function (primaryColor, seconda
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
 /**
  * @ignore
  * base event object for custom and dom event.
  * @author yiminghe@gmail.com
  */
 
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
 function returnFalse() {
   return false;
 }
@@ -2582,15 +2582,18 @@ EventBaseObject.prototype = {
   preventDefault: function preventDefault() {
     this.isDefaultPrevented = returnTrue;
   },
+
   stopPropagation: function stopPropagation() {
     this.isPropagationStopped = returnTrue;
   },
+
   stopImmediatePropagation: function stopImmediatePropagation() {
     this.isImmediatePropagationStopped = returnTrue;
     // fixed 1.2
     // call stopPropagation implicitly
     this.stopPropagation();
   },
+
   halt: function halt(immediate) {
     if (immediate) {
       this.stopImmediatePropagation();
@@ -2602,7 +2605,7 @@ EventBaseObject.prototype = {
 };
 
 exports["default"] = EventBaseObject;
-module.exports = exports['default'];
+module.exports = exports["default"];
 
 /***/ }),
 
@@ -2614,11 +2617,19 @@ module.exports = exports['default'];
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
+/**
+ * @ignore
+ * event object for dom
+ * @author yiminghe@gmail.com
+ */
 
 
-Object.defineProperty(exports, "__esModule", {
+
+Object.defineProperty(exports, '__esModule', {
   value: true
 });
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
 var _EventBaseObject = __webpack_require__(/*! ./EventBaseObject */ "./node_modules/add-dom-event-listener/lib/EventBaseObject.js");
 
@@ -2627,14 +2638,6 @@ var _EventBaseObject2 = _interopRequireDefault(_EventBaseObject);
 var _objectAssign = __webpack_require__(/*! object-assign */ "./node_modules/object-assign/index.js");
 
 var _objectAssign2 = _interopRequireDefault(_objectAssign);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
-
-/**
- * @ignore
- * event object for dom
- * @author yiminghe@gmail.com
- */
 
 var TRUE = true;
 var FALSE = false;
@@ -2670,9 +2673,9 @@ var eventNormalizers = [{
   reg: /^(mousewheel|DOMMouseScroll)$/,
   props: [],
   fix: function fix(event, nativeEvent) {
-    var deltaX = void 0;
-    var deltaY = void 0;
-    var delta = void 0;
+    var deltaX = undefined;
+    var deltaY = undefined;
+    var delta = undefined;
     var wheelDelta = nativeEvent.wheelDelta;
     var axis = nativeEvent.axis;
     var wheelDeltaY = nativeEvent.wheelDeltaY;
@@ -2745,9 +2748,9 @@ var eventNormalizers = [{
   reg: /^mouse|contextmenu|click|mspointer|(^DOMMouseScroll$)/i,
   props: ['buttons', 'clientX', 'clientY', 'button', 'offsetX', 'relatedTarget', 'which', 'fromElement', 'toElement', 'offsetY', 'pageX', 'pageY', 'screenX', 'screenY'],
   fix: function fix(event, nativeEvent) {
-    var eventDoc = void 0;
-    var doc = void 0;
-    var body = void 0;
+    var eventDoc = undefined;
+    var doc = undefined;
+    var body = undefined;
     var target = event.target;
     var button = nativeEvent.button;
 
@@ -2796,7 +2799,7 @@ function DomEventObject(nativeEvent) {
 
   var isNative = typeof nativeEvent.stopPropagation === 'function' || typeof nativeEvent.cancelBubble === 'boolean';
 
-  _EventBaseObject2["default"].call(this);
+  _EventBaseObject2['default'].call(this);
 
   this.nativeEvent = nativeEvent;
 
@@ -2814,9 +2817,9 @@ function DomEventObject(nativeEvent) {
   this.isDefaultPrevented = isDefaultPrevented;
 
   var fixFns = [];
-  var fixFn = void 0;
-  var l = void 0;
-  var prop = void 0;
+  var fixFn = undefined;
+  var l = undefined;
+  var prop = undefined;
   var props = commonProps.concat();
 
   eventNormalizers.forEach(function (normalizer) {
@@ -2856,9 +2859,9 @@ function DomEventObject(nativeEvent) {
   this.timeStamp = nativeEvent.timeStamp || Date.now();
 }
 
-var EventBaseObjectProto = _EventBaseObject2["default"].prototype;
+var EventBaseObjectProto = _EventBaseObject2['default'].prototype;
 
-(0, _objectAssign2["default"])(DomEventObject.prototype, EventBaseObjectProto, {
+(0, _objectAssign2['default'])(DomEventObject.prototype, EventBaseObjectProto, {
   constructor: DomEventObject,
 
   preventDefault: function preventDefault() {
@@ -2874,6 +2877,7 @@ var EventBaseObjectProto = _EventBaseObject2["default"].prototype;
 
     EventBaseObjectProto.preventDefault.call(this);
   },
+
   stopPropagation: function stopPropagation() {
     var e = this.nativeEvent;
 
@@ -2889,7 +2893,7 @@ var EventBaseObjectProto = _EventBaseObject2["default"].prototype;
   }
 });
 
-exports["default"] = DomEventObject;
+exports['default'] = DomEventObject;
 module.exports = exports['default'];
 
 /***/ }),
@@ -2904,30 +2908,44 @@ module.exports = exports['default'];
 "use strict";
 
 
-Object.defineProperty(exports, "__esModule", {
+Object.defineProperty(exports, '__esModule', {
   value: true
 });
-exports["default"] = addEventListener;
+exports['default'] = addEventListener;
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
 var _EventObject = __webpack_require__(/*! ./EventObject */ "./node_modules/add-dom-event-listener/lib/EventObject.js");
 
 var _EventObject2 = _interopRequireDefault(_EventObject);
 
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
-
-function addEventListener(target, eventType, callback) {
+function addEventListener(target, eventType, callback, option) {
   function wrapCallback(e) {
-    var ne = new _EventObject2["default"](e);
+    var ne = new _EventObject2['default'](e);
     callback.call(target, ne);
   }
 
   if (target.addEventListener) {
-    target.addEventListener(eventType, wrapCallback, false);
-    return {
-      remove: function remove() {
-        target.removeEventListener(eventType, wrapCallback, false);
+    var _ret = (function () {
+      var useCapture = false;
+      if (typeof option === 'object') {
+        useCapture = option.capture || false;
+      } else if (typeof option === 'boolean') {
+        useCapture = option;
       }
-    };
+
+      target.addEventListener(eventType, wrapCallback, option || false);
+
+      return {
+        v: {
+          remove: function remove() {
+            target.removeEventListener(eventType, wrapCallback, useCapture);
+          }
+        }
+      };
+    })();
+
+    if (typeof _ret === 'object') return _ret.v;
   } else if (target.attachEvent) {
     target.attachEvent('on' + eventType, wrapCallback);
     return {
@@ -2937,6 +2955,7 @@ function addEventListener(target, eventType, callback) {
     };
   }
 }
+
 module.exports = exports['default'];
 
 /***/ }),
@@ -3120,7 +3139,7 @@ function getScroll(target, top) {
     var ret = isWindow ? target[prop] : target[method];
     // ie6,7,8 standard mode
     if (isWindow && typeof ret !== 'number') {
-        ret = window.document.documentElement[method];
+        ret = document.documentElement[method];
     }
     return ret;
 }
@@ -7026,6 +7045,8 @@ var Popconfirm = function (_React$Component) {
         _this.renderOverlay = function (popconfirmLocale) {
             var _this$props = _this.props,
                 prefixCls = _this$props.prefixCls,
+                okButtonProps = _this$props.okButtonProps,
+                cancelButtonProps = _this$props.cancelButtonProps,
                 title = _this$props.title,
                 cancelText = _this$props.cancelText,
                 okText = _this$props.okText,
@@ -7053,12 +7074,12 @@ var Popconfirm = function (_React$Component) {
                         { className: prefixCls + '-buttons' },
                         React.createElement(
                             _button2['default'],
-                            { onClick: _this.onCancel, size: 'small' },
+                            (0, _extends3['default'])({ onClick: _this.onCancel, size: 'small' }, cancelButtonProps),
                             cancelText || popconfirmLocale.cancelText
                         ),
                         React.createElement(
                             _button2['default'],
-                            { onClick: _this.onConfirm, type: okType, size: 'small' },
+                            (0, _extends3['default'])({ onClick: _this.onConfirm, type: okType, size: 'small' }, okButtonProps),
                             okText || popconfirmLocale.okText
                         )
                     )
@@ -7108,6 +7129,8 @@ var Popconfirm = function (_React$Component) {
         value: function getDerivedStateFromProps(nextProps) {
             if ('visible' in nextProps) {
                 return { visible: nextProps.visible };
+            } else if ('defaultVisible' in nextProps) {
+                return { visible: nextProps.defaultVisible };
             }
             return null;
         }
@@ -13923,9 +13946,7 @@ function connect(mapStateToProps) {
             return;
           }
           var nextState = finnalMapStateToProps(_this.store.getState(), _this.props);
-          if (!(0, _shallowequal2.default)(_this.state.subscribed, nextState)) {
-            _this.setState({ subscribed: nextState });
-          }
+          _this.setState({ subscribed: nextState });
         };
 
         _this.store = context.miniStore;
@@ -13946,6 +13967,11 @@ function connect(mapStateToProps) {
         key: 'componentWillUnmount',
         value: function componentWillUnmount() {
           this.tryUnsubscribe();
+        }
+      }, {
+        key: 'shouldComponentUpdate',
+        value: function shouldComponentUpdate(nextProps, nextState) {
+          return !(0, _shallowequal2.default)(this.props, nextProps) || !(0, _shallowequal2.default)(this.state.subscribed, nextState.subscribed);
         }
       }, {
         key: 'trySubscribe',
@@ -14114,12 +14140,12 @@ a:!(!b.characterData&&!b.characterDataOldValue)},d=this.i,f=0;f<d.length;f++)d[f
 
 /***/ "./node_modules/object-assign/index.js":
 /*!***************************************************************************************************!*\
-  !*** delegated ./node_modules/object-assign/index.js from dll-reference dll_5d62d38be3592dca3a42 ***!
+  !*** delegated ./node_modules/object-assign/index.js from dll-reference dll_10edf27d814a728d21af ***!
   \***************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = (__webpack_require__(/*! dll-reference dll_5d62d38be3592dca3a42 */ "dll-reference dll_5d62d38be3592dca3a42"))("./node_modules/object-assign/index.js");
+module.exports = (__webpack_require__(/*! dll-reference dll_10edf27d814a728d21af */ "dll-reference dll_10edf27d814a728d21af"))("./node_modules/object-assign/index.js");
 
 /***/ }),
 
@@ -14393,12 +14419,12 @@ process.umask = function() { return 0; };
 
 /***/ "./node_modules/prop-types/checkPropTypes.js":
 /*!*********************************************************************************************************!*\
-  !*** delegated ./node_modules/prop-types/checkPropTypes.js from dll-reference dll_5d62d38be3592dca3a42 ***!
+  !*** delegated ./node_modules/prop-types/checkPropTypes.js from dll-reference dll_10edf27d814a728d21af ***!
   \*********************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = (__webpack_require__(/*! dll-reference dll_5d62d38be3592dca3a42 */ "dll-reference dll_5d62d38be3592dca3a42"))("./node_modules/prop-types/checkPropTypes.js");
+module.exports = (__webpack_require__(/*! dll-reference dll_10edf27d814a728d21af */ "dll-reference dll_10edf27d814a728d21af"))("./node_modules/prop-types/checkPropTypes.js");
 
 /***/ }),
 
@@ -15006,12 +15032,12 @@ if (true) {
 
 /***/ "./node_modules/prop-types/lib/ReactPropTypesSecret.js":
 /*!*******************************************************************************************************************!*\
-  !*** delegated ./node_modules/prop-types/lib/ReactPropTypesSecret.js from dll-reference dll_5d62d38be3592dca3a42 ***!
+  !*** delegated ./node_modules/prop-types/lib/ReactPropTypesSecret.js from dll-reference dll_10edf27d814a728d21af ***!
   \*******************************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = (__webpack_require__(/*! dll-reference dll_5d62d38be3592dca3a42 */ "dll-reference dll_5d62d38be3592dca3a42"))("./node_modules/prop-types/lib/ReactPropTypesSecret.js");
+module.exports = (__webpack_require__(/*! dll-reference dll_10edf27d814a728d21af */ "dll-reference dll_10edf27d814a728d21af"))("./node_modules/prop-types/lib/ReactPropTypesSecret.js");
 
 /***/ }),
 
@@ -16732,7 +16758,7 @@ var InputNumber = function (_React$Component) {
 
         if (
         // If not match full str, try to match part of str
-        !this.partRestoreByAfter(this.cursorAfter)) {
+        !this.partRestoreByAfter(this.cursorAfter) && this.state.value !== this.props.value) {
           // If not match any of then, let's just keep the position
           // TODO: Logic should not reach here, need check if happens
           var pos = this.cursorStart + 1;
@@ -17522,6 +17548,18 @@ var DOMWrap = function (_React$Component) {
 
     return _ret = (_temp = (_this = babel_runtime_helpers_possibleConstructorReturn__WEBPACK_IMPORTED_MODULE_3___default()(this, _React$Component.call.apply(_React$Component, [this].concat(args))), _this), _this.state = {
       lastVisibleIndex: undefined
+    }, _this.getMenuItemNodes = function () {
+      var prefixCls = _this.props.prefixCls;
+
+      var ul = react_dom__WEBPACK_IMPORTED_MODULE_6___default.a.findDOMNode(_this);
+      if (!ul) {
+        return [];
+      }
+
+      // filter out all overflowed indicator placeholder
+      return [].slice.call(ul.children).filter(function (node) {
+        return node.className.split(' ').indexOf(prefixCls + '-overflowed-submenu') < 0;
+      });
     }, _this.getOverflowedSubMenuItem = function (keyPrefix, overflowedItems, renderPlaceholder) {
       var _this$props = _this.props,
           overflowedIndicator = _this$props.overflowedIndicator,
@@ -17561,6 +17599,12 @@ var DOMWrap = function (_React$Component) {
       }
 
       var popupClassName = theme ? prefixCls + '-' + theme : '';
+      var props = {};
+      _util__WEBPACK_IMPORTED_MODULE_10__["menuAllProps"].forEach(function (k) {
+        if (rest[k] !== undefined) {
+          props[k] = rest[k];
+        }
+      });
 
       return react__WEBPACK_IMPORTED_MODULE_5___default.a.createElement(
         _SubMenu__WEBPACK_IMPORTED_MODULE_9__["default"],
@@ -17568,7 +17612,7 @@ var DOMWrap = function (_React$Component) {
           title: overflowedIndicator,
           className: prefixCls + '-overflowed-submenu',
           popupClassName: popupClassName
-        }, rest, {
+        }, props, {
           key: key,
           eventKey: keyPrefix + '-overflowed-indicator',
           disabled: false,
@@ -17592,27 +17636,38 @@ var DOMWrap = function (_React$Component) {
         return;
       }
 
-      _this.childrenSizes = [];
-      var children = _this.props.children;
-
-
       var lastOverflowedIndicatorPlaceholder = ul.children[ulChildrenNodes.length - 1];
 
       // need last overflowed indicator for calculating length;
-      Object(_util__WEBPACK_IMPORTED_MODULE_10__["setWidth"])(lastOverflowedIndicatorPlaceholder, 'auto');
-      _this.childrenSizes = children.map(function (c, i) {
-        return Object(_util__WEBPACK_IMPORTED_MODULE_10__["getWidth"])(ul.children[2 * i + 1]);
+      Object(_util__WEBPACK_IMPORTED_MODULE_10__["setStyle"])(lastOverflowedIndicatorPlaceholder, 'display', 'inline-block');
+
+      var menuItemNodes = _this.getMenuItemNodes();
+
+      // reset display attribute for all li elements to calculate updated width
+      // and then reset to original state after width calculation
+      var displayValueCaches = [];
+
+      menuItemNodes.forEach(function (c) {
+        displayValueCaches.push(c.style.display);
+        Object(_util__WEBPACK_IMPORTED_MODULE_10__["setStyle"])(c, 'display', 'inline-block');
+      });
+
+      _this.menuItemSizes = menuItemNodes.map(function (c) {
+        return Object(_util__WEBPACK_IMPORTED_MODULE_10__["getWidth"])(c);
+      });
+
+      menuItemNodes.forEach(function (c, i) {
+        Object(_util__WEBPACK_IMPORTED_MODULE_10__["setStyle"])(c, 'display', displayValueCaches[i]);
       });
 
       _this.overflowedIndicatorWidth = Object(_util__WEBPACK_IMPORTED_MODULE_10__["getWidth"])(ul.children[ul.children.length - 1]);
-      _this.originalTotalWidth = _this.childrenSizes.reduce(function (acc, cur) {
+      _this.originalTotalWidth = _this.menuItemSizes.reduce(function (acc, cur) {
         return acc + cur;
       }, 0);
       _this.handleResize();
-
       // prevent the overflowed indicator from taking space;
-      Object(_util__WEBPACK_IMPORTED_MODULE_10__["setWidth"])(lastOverflowedIndicatorPlaceholder, 0);
-    }, _this.resizeObserver = null, _this.mutationObserver = null, _this.originalTotalWidth = 0, _this.overflowedItems = [], _this.childrenSizes = [], _this.handleResize = function () {
+      Object(_util__WEBPACK_IMPORTED_MODULE_10__["setStyle"])(lastOverflowedIndicatorPlaceholder, 'display', 'none');
+    }, _this.resizeObserver = null, _this.mutationObserver = null, _this.originalTotalWidth = 0, _this.overflowedItems = [], _this.menuItemSizes = [], _this.handleResize = function () {
       if (_this.props.mode !== 'horizontal') {
         return;
       }
@@ -17632,7 +17687,7 @@ var DOMWrap = function (_React$Component) {
       if (_this.originalTotalWidth > width) {
         lastVisibleIndex = -1;
 
-        _this.childrenSizes.forEach(function (liWidth) {
+        _this.menuItemSizes.forEach(function (liWidth) {
           currentSumWidth += liWidth;
           if (currentSumWidth + _this.overflowedIndicatorWidth <= width) {
             lastVisibleIndex++;
@@ -17683,6 +17738,9 @@ var DOMWrap = function (_React$Component) {
     }
   };
 
+  // get all valid menuItem nodes
+
+
   // memorize rendered menuSize
 
 
@@ -17709,7 +17767,7 @@ var DOMWrap = function (_React$Component) {
           if (index > lastVisibleIndex) {
             item = react__WEBPACK_IMPORTED_MODULE_5___default.a.cloneElement(childNode,
             // 这里修改 eventKey 是为了防止隐藏状态下还会触发 openkeys 事件
-            { style: { visibility: 'hidden' }, eventKey: childNode.props.eventKey + '-hidden' });
+            { style: { display: 'none' }, eventKey: childNode.props.eventKey + '-hidden' });
           }
           if (index === lastVisibleIndex + 1) {
             _this3.overflowedItems = children.slice(lastVisibleIndex + 1).map(function (c) {
@@ -18458,9 +18516,6 @@ var MenuItemGroup = function (_React$Component) {
     var _props$className = props.className,
         className = _props$className === undefined ? '' : _props$className,
         rootPrefixCls = props.rootPrefixCls;
-    var mode = props.mode,
-        inlineIndent = props.inlineIndent,
-        level = props.level;
 
     var titleClassName = rootPrefixCls + '-item-group-title';
     var listClassName = rootPrefixCls + '-item-group-list';
@@ -18474,11 +18529,6 @@ var MenuItemGroup = function (_React$Component) {
     // Set onClick to null, to ignore propagated onClick event
     delete props.onClick;
 
-    var titleStyle = {};
-    if (mode === 'inline') {
-      titleStyle.paddingLeft = inlineIndent * level;
-    }
-
     return react__WEBPACK_IMPORTED_MODULE_5___default.a.createElement(
       'li',
       babel_runtime_helpers_extends__WEBPACK_IMPORTED_MODULE_0___default()({}, props, { className: className + ' ' + rootPrefixCls + '-item-group' }),
@@ -18486,7 +18536,6 @@ var MenuItemGroup = function (_React$Component) {
         'div',
         {
           className: titleClassName,
-          style: titleStyle,
           title: typeof title === 'string' ? title : undefined
         },
         title
@@ -19039,7 +19088,11 @@ var _initialiseProps = function _initialiseProps() {
   };
 
   this.onSubMenuClick = function (info) {
-    _this3.props.onClick(_this3.addKeyPath(info));
+    // in the case of overflowed submenu
+    // onClick is not copied over
+    if (typeof _this3.props.onClick === 'function') {
+      _this3.props.onClick(_this3.addKeyPath(info));
+    }
   };
 
   this.onSelect = function (info) {
@@ -19662,7 +19715,7 @@ var placements = {
 /*!*****************************************!*\
   !*** ./node_modules/rc-menu/es/util.js ***!
   \*****************************************/
-/*! exports provided: noop, getKeyFromChildrenIndex, getMenuIdFromSubMenuEventKey, loopMenuItem, loopMenuItemRecursively, menuAllProps, getWidth, setWidth */
+/*! exports provided: noop, getKeyFromChildrenIndex, getMenuIdFromSubMenuEventKey, loopMenuItem, loopMenuItemRecursively, menuAllProps, getWidth, setStyle */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -19674,7 +19727,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "loopMenuItemRecursively", function() { return loopMenuItemRecursively; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "menuAllProps", function() { return menuAllProps; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getWidth", function() { return getWidth; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "setWidth", function() { return setWidth; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "setStyle", function() { return setStyle; });
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
 
@@ -19734,9 +19787,9 @@ var getWidth = function getWidth(elem) {
   return elem && typeof elem.getBoundingClientRect === 'function' && elem.getBoundingClientRect().width || 0;
 };
 
-var setWidth = function setWidth(elem, width) {
+var setStyle = function setStyle(elem, styleProperty, value) {
   if (elem && typeof elem.style === 'object') {
-    elem.style.width = width;
+    elem.style[styleProperty] = value;
   }
 };
 
@@ -21071,9 +21124,15 @@ var _initialiseProps = function _initialiseProps() {
     var keyCode = event.keyCode;
     if (open && !_this2.getInputDOMNode()) {
       _this2.onInputKeyDown(event);
-    } else if (keyCode === rc_util_es_KeyCode__WEBPACK_IMPORTED_MODULE_9__["default"].ENTER || keyCode === rc_util_es_KeyCode__WEBPACK_IMPORTED_MODULE_9__["default"].DOWN || keyCode === rc_util_es_KeyCode__WEBPACK_IMPORTED_MODULE_9__["default"].SPACE) {
+    } else if (keyCode === rc_util_es_KeyCode__WEBPACK_IMPORTED_MODULE_9__["default"].ENTER || keyCode === rc_util_es_KeyCode__WEBPACK_IMPORTED_MODULE_9__["default"].DOWN) {
       if (!open) _this2.setOpenState(true);
       event.preventDefault();
+    } else if (keyCode === rc_util_es_KeyCode__WEBPACK_IMPORTED_MODULE_9__["default"].SPACE) {
+      // Not block space if popup is shown
+      if (!open) {
+        _this2.setOpenState(true);
+        event.preventDefault();
+      }
     }
   };
 
@@ -21205,7 +21264,8 @@ var _initialiseProps = function _initialiseProps() {
     }
     _this2._focused = true;
     _this2.updateFocusClassName();
-    if (!_this2._mouseDown) {
+    // only effect multiple or tag mode
+    if (!Object(_util__WEBPACK_IMPORTED_MODULE_17__["isMultipleOrTags"])(_this2.props) || !_this2._mouseDown) {
       _this2.timeoutFocus();
     }
   };
@@ -22235,9 +22295,6 @@ var _initialiseProps = function _initialiseProps() {
   var _this2 = this;
 
   this.setDropdownWidth = function () {
-    if (!_this2.props.dropdownMatchSelectWidth) {
-      return;
-    }
     var width = react_dom__WEBPACK_IMPORTED_MODULE_11___default.a.findDOMNode(_this2).offsetWidth;
     if (width !== _this2.state.dropdownWidth) {
       _this2.setState({ dropdownWidth: width });
@@ -24477,12 +24534,12 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
-function addEventListenerWrap(target, eventType, cb) {
+function addEventListenerWrap(target, eventType, cb, option) {
   /* eslint camelcase: 2 */
   var callback = react_dom__WEBPACK_IMPORTED_MODULE_1___default.a.unstable_batchedUpdates ? function run(e) {
     react_dom__WEBPACK_IMPORTED_MODULE_1___default.a.unstable_batchedUpdates(cb, e);
   } : cb;
-  return add_dom_event_listener__WEBPACK_IMPORTED_MODULE_0___default()(target, eventType, callback);
+  return add_dom_event_listener__WEBPACK_IMPORTED_MODULE_0___default()(target, eventType, callback, option);
 }
 
 /***/ }),
@@ -25195,12 +25252,12 @@ var _reactDom2 = _interopRequireDefault(_reactDom);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
-function addEventListenerWrap(target, eventType, cb) {
+function addEventListenerWrap(target, eventType, cb, option) {
   /* eslint camelcase: 2 */
   var callback = _reactDom2['default'].unstable_batchedUpdates ? function run(e) {
     _reactDom2['default'].unstable_batchedUpdates(cb, e);
   } : cb;
-  return (0, _addDomEventListener2['default'])(target, eventType, callback);
+  return (0, _addDomEventListener2['default'])(target, eventType, callback, option);
 }
 module.exports = exports['default'];
 
@@ -25208,12 +25265,12 @@ module.exports = exports['default'];
 
 /***/ "./node_modules/react-dom/index.js":
 /*!***********************************************************************************************!*\
-  !*** delegated ./node_modules/react-dom/index.js from dll-reference dll_5d62d38be3592dca3a42 ***!
+  !*** delegated ./node_modules/react-dom/index.js from dll-reference dll_10edf27d814a728d21af ***!
   \***********************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = (__webpack_require__(/*! dll-reference dll_5d62d38be3592dca3a42 */ "dll-reference dll_5d62d38be3592dca3a42"))("./node_modules/react-dom/index.js");
+module.exports = (__webpack_require__(/*! dll-reference dll_10edf27d814a728d21af */ "dll-reference dll_10edf27d814a728d21af"))("./node_modules/react-dom/index.js");
 
 /***/ }),
 
@@ -25389,426 +25446,14 @@ function polyfill(Component) {
 
 /***/ }),
 
-/***/ "./node_modules/react-minimal-pie-chart/dist/index.js":
-/*!************************************************************!*\
-  !*** ./node_modules/react-minimal-pie-chart/dist/index.js ***!
-  \************************************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-(function (global, factory) {
-	 true ? factory(exports, __webpack_require__(/*! react */ "./node_modules/react/index.js"), __webpack_require__(/*! prop-types */ "./node_modules/prop-types/index.js")) :
-	undefined;
-}(this, (function (exports,React,PropTypes) { 'use strict';
-
-var React__default = 'default' in React ? React['default'] : React;
-PropTypes = PropTypes && PropTypes.hasOwnProperty('default') ? PropTypes['default'] : PropTypes;
-
-// from http://stackoverflow.com/a/18473154
-
-var partialCircle = function partialCircle(cx, cy, r, start, end) {
-	var length = end - start;
-	if (length === 0) return [];
-
-	var fromX = r * Math.cos(start) + cx;
-	var fromY = r * Math.sin(start) + cy;
-	var toX = r * Math.cos(end) + cx;
-	var toY = r * Math.sin(end) + cy;
-	var large = Math.abs(length) <= Math.PI ? '0' : '1';
-	var sweep = length < 0 ? '0' : '1';
-
-	return [['M', fromX, fromY], ['A', r, r, 0, large, sweep, toX, toY]];
-};
-
-var svgPartialCircle = partialCircle;
-
-var classCallCheck = function (instance, Constructor) {
-  if (!(instance instanceof Constructor)) {
-    throw new TypeError("Cannot call a class as a function");
-  }
-};
-
-
-
-
-
-
-
-
-
-var _extends = Object.assign || function (target) {
-  for (var i = 1; i < arguments.length; i++) {
-    var source = arguments[i];
-
-    for (var key in source) {
-      if (Object.prototype.hasOwnProperty.call(source, key)) {
-        target[key] = source[key];
-      }
-    }
-  }
-
-  return target;
-};
-
-
-
-var inherits = function (subClass, superClass) {
-  if (typeof superClass !== "function" && superClass !== null) {
-    throw new TypeError("Super expression must either be null or a function, not " + typeof superClass);
-  }
-
-  subClass.prototype = Object.create(superClass && superClass.prototype, {
-    constructor: {
-      value: subClass,
-      enumerable: false,
-      writable: true,
-      configurable: true
-    }
-  });
-  if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass;
-};
-
-
-
-
-
-
-
-
-
-var objectWithoutProperties = function (obj, keys) {
-  var target = {};
-
-  for (var i in obj) {
-    if (keys.indexOf(i) >= 0) continue;
-    if (!Object.prototype.hasOwnProperty.call(obj, i)) continue;
-    target[i] = obj[i];
-  }
-
-  return target;
-};
-
-var possibleConstructorReturn = function (self, call) {
-  if (!self) {
-    throw new ReferenceError("this hasn't been initialised - super() hasn't been called");
-  }
-
-  return call && (typeof call === "object" || typeof call === "function") ? call : self;
-};
-
-var PI = Math.PI;
-var degreesToRadians = function degreesToRadians(degrees) {
-  return degrees * PI / 180;
-};
-
-var makePathCommands = function makePathCommands(cx, cy, startAngle, lengthAngle, radius) {
-  var patchedLengthAngle = lengthAngle;
-
-  if (patchedLengthAngle >= 360) patchedLengthAngle = 359.999;
-  if (patchedLengthAngle <= -360) patchedLengthAngle = -359.999;
-
-  return svgPartialCircle(cx, cy, // center X and Y
-  radius, degreesToRadians(startAngle), degreesToRadians(startAngle + patchedLengthAngle)).map(function (command) {
-    return command.join(' ');
-  }).join(' ');
-};
-
-function ReactMinimalPieChartPath(_ref) {
-  var cx = _ref.cx,
-      cy = _ref.cy,
-      startAngle = _ref.startAngle,
-      lengthAngle = _ref.lengthAngle,
-      radius = _ref.radius,
-      lineWidth = _ref.lineWidth,
-      reveal = _ref.reveal,
-      title = _ref.title,
-      props = objectWithoutProperties(_ref, ['cx', 'cy', 'startAngle', 'lengthAngle', 'radius', 'lineWidth', 'reveal', 'title']);
-
-  var actualRadio = radius - lineWidth / 2;
-  var pathCommands = makePathCommands(cx, cy, startAngle, lengthAngle, actualRadio);
-  var strokeDasharray = void 0;
-  var strokeDashoffset = void 0;
-
-  // Animate/hide paths with "stroke-dasharray" + "stroke-dashoffset"
-  // https://css-tricks.com/svg-line-animation-works/
-  if (typeof reveal === 'number') {
-    strokeDasharray = PI * actualRadio / 180 * Math.abs(lengthAngle);
-    strokeDashoffset = strokeDasharray + strokeDasharray / 100 * reveal;
-  }
-
-  return React__default.createElement(
-    'path',
-    _extends({
-      d: pathCommands,
-      strokeWidth: lineWidth,
-      strokeDasharray: strokeDasharray,
-      strokeDashoffset: strokeDashoffset
-    }, props),
-    title && React__default.createElement(
-      'title',
-      null,
-      title
-    )
-  );
-}
-
-ReactMinimalPieChartPath.displayName = 'ReactMinimalPieChartPath';
-
-ReactMinimalPieChartPath.propTypes = {
-  cx: PropTypes.number.isRequired,
-  cy: PropTypes.number.isRequired,
-  startAngle: PropTypes.number,
-  lengthAngle: PropTypes.number,
-  radius: PropTypes.number,
-  lineWidth: PropTypes.number,
-  reveal: PropTypes.number,
-  title: PropTypes.oneOfType([PropTypes.number, PropTypes.string])
-};
-
-ReactMinimalPieChartPath.defaultProps = {
-  startAngle: 0,
-  lengthAngle: 0,
-  lineWidth: 100,
-  radius: 100
-};
-
-var VIEWBOX_SIZE = 100;
-var VIEWBOX_HALF_SIZE = VIEWBOX_SIZE / 2;
-
-var sumValues = function sumValues(data) {
-  return data.reduce(function (acc, dataEntry) {
-    return acc + dataEntry.value;
-  }, 0);
-};
-
-var evaluateViewBoxSize = function evaluateViewBoxSize(ratio, baseSize) {
-  // Wide ratio
-  if (ratio > 1) {
-    return baseSize + ' ' + baseSize / ratio;
-  }
-  // Narrow/squared ratio
-  return baseSize * ratio + ' ' + baseSize;
-};
-
-// @TODO extract padding evaluation
-var evaluateDegreesFromValues = function evaluateDegreesFromValues(data, totalAngle, totalValue, paddingAngle) {
-  var total = totalValue || sumValues(data);
-
-  // Remove segments padding from total degrees
-  var degreesTakenByPadding = paddingAngle * data.length;
-  var totalDegrees = Math.abs(totalAngle) - degreesTakenByPadding;
-
-  if (totalDegrees > 360) totalDegrees = 360;
-  if (totalAngle < 0) totalDegrees = -totalDegrees;
-
-  // Append "degrees" into each data entry
-  return data.map(function (dataEntry) {
-    return Object.assign({ degrees: dataEntry.value / total * totalDegrees }, dataEntry);
-  });
-};
-
-var makeSegmentTransitionStyle = function makeSegmentTransitionStyle(duration, easing) {
-  var furtherStyles = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
-
-  // Merge CSS transition necessary for chart animation with the ones provided by "segmentsStyle"
-  var transition = ['stroke-dashoffset ' + duration + 'ms ' + easing, furtherStyles.transition].filter(Boolean).join(',');
-
-  return {
-    transition: transition
-  };
-};
-
-var makeSegments = function makeSegments(data, props, hide) {
-  // Keep track of how many degrees have already been taken
-  var lastSegmentAngle = props.startAngle;
-  var segmentsPaddingAngle = props.paddingAngle * (props.lengthAngle / Math.abs(props.lengthAngle));
-  var reveal = void 0;
-
-  var style = props.segmentsStyle;
-
-  if (props.animate) {
-    var transitionStyle = makeSegmentTransitionStyle(props.animationDuration, props.animationEasing, style);
-    style = Object.assign({}, style, transitionStyle);
-  }
-
-  // Hide/reveal the segment?
-  if (hide === true) {
-    reveal = 0;
-  } else if (typeof props.reveal === 'number') {
-    reveal = props.reveal;
-  } else if (hide === false) {
-    reveal = 100;
-  }
-
-  return data.map(function (dataEntry, index) {
-    var startAngle = lastSegmentAngle;
-    lastSegmentAngle += dataEntry.degrees + segmentsPaddingAngle;
-
-    return React__default.createElement(ReactMinimalPieChartPath, {
-      key: dataEntry.key || index,
-      cx: props.cx,
-      cy: props.cy,
-      startAngle: startAngle,
-      lengthAngle: dataEntry.degrees,
-      radius: props.radius,
-      lineWidth: props.radius / 100 * props.lineWidth,
-      reveal: reveal,
-      style: style,
-      stroke: dataEntry.color,
-      strokeLinecap: props.rounded ? 'round' : undefined,
-      fill: 'none',
-      onMouseOver: props.onMouseOver && function (e) {
-        return props.onMouseOver(e, props.data, index);
-      },
-      onMouseOut: props.onMouseOut && function (e) {
-        return props.onMouseOut(e, props.data, index);
-      },
-      onClick: props.onClick && function (e) {
-        return props.onClick(e, props.data, index);
-      }
-    });
-  });
-};
-
-var ReactMinimalPieChart = function (_PureComponent) {
-  inherits(ReactMinimalPieChart, _PureComponent);
-
-  function ReactMinimalPieChart(props) {
-    classCallCheck(this, ReactMinimalPieChart);
-
-    var _this = possibleConstructorReturn(this, _PureComponent.call(this, props));
-
-    if (_this.props.animate === true) {
-      _this.hideSegments = true;
-    }
-    return _this;
-  }
-
-  ReactMinimalPieChart.prototype.componentDidMount = function componentDidMount() {
-    var _this2 = this;
-
-    if (this.props.animate === true && requestAnimationFrame) {
-      this.initialAnimationTimerId = setTimeout(function () {
-        _this2.initialAnimationTimerId = null;
-        _this2.initialAnimationRAFId = requestAnimationFrame(function () {
-          _this2.initialAnimationRAFId = null, _this2.startAnimation();
-        });
-      });
-    }
-  };
-
-  ReactMinimalPieChart.prototype.componentWillUnmount = function componentWillUnmount() {
-    if (this.initialAnimationTimerId) {
-      clearTimeout(this.initialAnimationTimerId);
-    }
-    if (this.initialAnimationRAFId) {
-      cancelAnimationFrame(this.initialAnimationRAFId);
-    }
-  };
-
-  ReactMinimalPieChart.prototype.startAnimation = function startAnimation() {
-    this.hideSegments = false;
-    this.forceUpdate();
-  };
-
-  ReactMinimalPieChart.prototype.render = function render() {
-    if (this.props.data === undefined) {
-      return null;
-    }
-
-    var normalizedData = evaluateDegreesFromValues(this.props.data, this.props.lengthAngle, this.props.totalValue, this.props.paddingAngle);
-
-    return React__default.createElement(
-      'div',
-      {
-        className: this.props.className,
-        style: this.props.style
-      },
-      React__default.createElement(
-        'svg',
-        {
-          viewBox: '0 0 ' + evaluateViewBoxSize(this.props.ratio, VIEWBOX_SIZE),
-          width: '100%',
-          height: '100%',
-          style: { display: 'block' }
-        },
-        makeSegments(normalizedData, this.props, this.hideSegments)
-      ),
-      this.props.children
-    );
-  };
-
-  return ReactMinimalPieChart;
-}(React.PureComponent);
-
-ReactMinimalPieChart.displayName = 'ReactMinimalPieChart';
-
-ReactMinimalPieChart.propTypes = {
-  data: PropTypes.arrayOf(PropTypes.shape({
-    title: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
-    value: PropTypes.number.isRequired,
-    key: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
-    color: PropTypes.string
-  })),
-  cx: PropTypes.number,
-  cy: PropTypes.number,
-  ratio: PropTypes.number,
-  totalValue: PropTypes.number,
-  className: PropTypes.string,
-  style: PropTypes.objectOf(PropTypes.oneOfType([PropTypes.number, PropTypes.string])),
-  segmentsStyle: PropTypes.objectOf(PropTypes.oneOfType([PropTypes.number, PropTypes.string])),
-  startAngle: PropTypes.number,
-  lengthAngle: PropTypes.number,
-  paddingAngle: PropTypes.number,
-  lineWidth: PropTypes.number,
-  radius: PropTypes.number,
-  rounded: PropTypes.bool,
-  animate: PropTypes.bool,
-  animationDuration: PropTypes.number,
-  animationEasing: PropTypes.string,
-  reveal: PropTypes.number,
-  children: PropTypes.node,
-  onMouseOver: PropTypes.func,
-  onMouseOut: PropTypes.func,
-  onClick: PropTypes.func
-};
-
-ReactMinimalPieChart.defaultProps = {
-  cx: VIEWBOX_HALF_SIZE,
-  cy: VIEWBOX_HALF_SIZE,
-  ratio: 1,
-  startAngle: 0,
-  lengthAngle: 360,
-  paddingAngle: 0,
-  lineWidth: 100,
-  radius: VIEWBOX_HALF_SIZE,
-  rounded: false,
-  animate: false,
-  animationDuration: 500,
-  animationEasing: 'ease-out',
-  onMouseOver: undefined,
-  onMouseOut: undefined,
-  onClick: undefined
-};
-
-exports['default'] = ReactMinimalPieChart;
-
-Object.defineProperty(exports, '__esModule', { value: true });
-
-})));
-//# sourceMappingURL=index.js.map
-
-
-/***/ }),
-
 /***/ "./node_modules/react/index.js":
 /*!*******************************************************************************************!*\
-  !*** delegated ./node_modules/react/index.js from dll-reference dll_5d62d38be3592dca3a42 ***!
+  !*** delegated ./node_modules/react/index.js from dll-reference dll_10edf27d814a728d21af ***!
   \*******************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = (__webpack_require__(/*! dll-reference dll_5d62d38be3592dca3a42 */ "dll-reference dll_5d62d38be3592dca3a42"))("./node_modules/react/index.js");
+module.exports = (__webpack_require__(/*! dll-reference dll_10edf27d814a728d21af */ "dll-reference dll_10edf27d814a728d21af"))("./node_modules/react/index.js");
 
 /***/ }),
 
@@ -28417,38 +28062,38 @@ module.exports = function(originalModule) {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* WEBPACK VAR INJECTION */(function(module) {/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return _default; });
-/* harmony import */ var antd_lib_input_number_style_css__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! antd/lib/input-number/style/css */ "./node_modules/antd/lib/input-number/style/css.js");
-/* harmony import */ var antd_lib_input_number_style_css__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(antd_lib_input_number_style_css__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var antd_lib_input_number__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! antd/lib/input-number */ "./node_modules/antd/lib/input-number/index.js");
-/* harmony import */ var antd_lib_input_number__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(antd_lib_input_number__WEBPACK_IMPORTED_MODULE_1__);
-/* harmony import */ var antd_lib_row_style_css__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! antd/lib/row/style/css */ "./node_modules/antd/lib/row/style/css.js");
-/* harmony import */ var antd_lib_row_style_css__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(antd_lib_row_style_css__WEBPACK_IMPORTED_MODULE_2__);
-/* harmony import */ var antd_lib_row__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! antd/lib/row */ "./node_modules/antd/lib/row/index.js");
-/* harmony import */ var antd_lib_row__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(antd_lib_row__WEBPACK_IMPORTED_MODULE_3__);
-/* harmony import */ var antd_lib_col_style_css__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! antd/lib/col/style/css */ "./node_modules/antd/lib/col/style/css.js");
-/* harmony import */ var antd_lib_col_style_css__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(antd_lib_col_style_css__WEBPACK_IMPORTED_MODULE_4__);
-/* harmony import */ var antd_lib_col__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! antd/lib/col */ "./node_modules/antd/lib/col/index.js");
-/* harmony import */ var antd_lib_col__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(antd_lib_col__WEBPACK_IMPORTED_MODULE_5__);
-/* harmony import */ var antd_lib_popconfirm_style_css__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! antd/lib/popconfirm/style/css */ "./node_modules/antd/lib/popconfirm/style/css.js");
-/* harmony import */ var antd_lib_popconfirm_style_css__WEBPACK_IMPORTED_MODULE_6___default = /*#__PURE__*/__webpack_require__.n(antd_lib_popconfirm_style_css__WEBPACK_IMPORTED_MODULE_6__);
-/* harmony import */ var antd_lib_popconfirm__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! antd/lib/popconfirm */ "./node_modules/antd/lib/popconfirm/index.js");
-/* harmony import */ var antd_lib_popconfirm__WEBPACK_IMPORTED_MODULE_7___default = /*#__PURE__*/__webpack_require__.n(antd_lib_popconfirm__WEBPACK_IMPORTED_MODULE_7__);
-/* harmony import */ var antd_lib_affix_style_css__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! antd/lib/affix/style/css */ "./node_modules/antd/lib/affix/style/css.js");
-/* harmony import */ var antd_lib_affix_style_css__WEBPACK_IMPORTED_MODULE_8___default = /*#__PURE__*/__webpack_require__.n(antd_lib_affix_style_css__WEBPACK_IMPORTED_MODULE_8__);
-/* harmony import */ var antd_lib_affix__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! antd/lib/affix */ "./node_modules/antd/lib/affix/index.js");
-/* harmony import */ var antd_lib_affix__WEBPACK_IMPORTED_MODULE_9___default = /*#__PURE__*/__webpack_require__.n(antd_lib_affix__WEBPACK_IMPORTED_MODULE_9__);
-/* harmony import */ var antd_lib_menu_style_css__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! antd/lib/menu/style/css */ "./node_modules/antd/lib/menu/style/css.js");
-/* harmony import */ var antd_lib_menu_style_css__WEBPACK_IMPORTED_MODULE_10___default = /*#__PURE__*/__webpack_require__.n(antd_lib_menu_style_css__WEBPACK_IMPORTED_MODULE_10__);
-/* harmony import */ var antd_lib_menu__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! antd/lib/menu */ "./node_modules/antd/lib/menu/index.js");
-/* harmony import */ var antd_lib_menu__WEBPACK_IMPORTED_MODULE_11___default = /*#__PURE__*/__webpack_require__.n(antd_lib_menu__WEBPACK_IMPORTED_MODULE_11__);
+/* harmony import */ var antd_lib_message_style_css__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! antd/lib/message/style/css */ "./node_modules/antd/lib/message/style/css.js");
+/* harmony import */ var antd_lib_message_style_css__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(antd_lib_message_style_css__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var antd_lib_message__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! antd/lib/message */ "./node_modules/antd/lib/message/index.js");
+/* harmony import */ var antd_lib_message__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(antd_lib_message__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var antd_lib_input_number_style_css__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! antd/lib/input-number/style/css */ "./node_modules/antd/lib/input-number/style/css.js");
+/* harmony import */ var antd_lib_input_number_style_css__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(antd_lib_input_number_style_css__WEBPACK_IMPORTED_MODULE_2__);
+/* harmony import */ var antd_lib_input_number__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! antd/lib/input-number */ "./node_modules/antd/lib/input-number/index.js");
+/* harmony import */ var antd_lib_input_number__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(antd_lib_input_number__WEBPACK_IMPORTED_MODULE_3__);
+/* harmony import */ var antd_lib_row_style_css__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! antd/lib/row/style/css */ "./node_modules/antd/lib/row/style/css.js");
+/* harmony import */ var antd_lib_row_style_css__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(antd_lib_row_style_css__WEBPACK_IMPORTED_MODULE_4__);
+/* harmony import */ var antd_lib_row__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! antd/lib/row */ "./node_modules/antd/lib/row/index.js");
+/* harmony import */ var antd_lib_row__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(antd_lib_row__WEBPACK_IMPORTED_MODULE_5__);
+/* harmony import */ var antd_lib_col_style_css__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! antd/lib/col/style/css */ "./node_modules/antd/lib/col/style/css.js");
+/* harmony import */ var antd_lib_col_style_css__WEBPACK_IMPORTED_MODULE_6___default = /*#__PURE__*/__webpack_require__.n(antd_lib_col_style_css__WEBPACK_IMPORTED_MODULE_6__);
+/* harmony import */ var antd_lib_col__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! antd/lib/col */ "./node_modules/antd/lib/col/index.js");
+/* harmony import */ var antd_lib_col__WEBPACK_IMPORTED_MODULE_7___default = /*#__PURE__*/__webpack_require__.n(antd_lib_col__WEBPACK_IMPORTED_MODULE_7__);
+/* harmony import */ var antd_lib_popconfirm_style_css__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! antd/lib/popconfirm/style/css */ "./node_modules/antd/lib/popconfirm/style/css.js");
+/* harmony import */ var antd_lib_popconfirm_style_css__WEBPACK_IMPORTED_MODULE_8___default = /*#__PURE__*/__webpack_require__.n(antd_lib_popconfirm_style_css__WEBPACK_IMPORTED_MODULE_8__);
+/* harmony import */ var antd_lib_popconfirm__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! antd/lib/popconfirm */ "./node_modules/antd/lib/popconfirm/index.js");
+/* harmony import */ var antd_lib_popconfirm__WEBPACK_IMPORTED_MODULE_9___default = /*#__PURE__*/__webpack_require__.n(antd_lib_popconfirm__WEBPACK_IMPORTED_MODULE_9__);
+/* harmony import */ var antd_lib_affix_style_css__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! antd/lib/affix/style/css */ "./node_modules/antd/lib/affix/style/css.js");
+/* harmony import */ var antd_lib_affix_style_css__WEBPACK_IMPORTED_MODULE_10___default = /*#__PURE__*/__webpack_require__.n(antd_lib_affix_style_css__WEBPACK_IMPORTED_MODULE_10__);
+/* harmony import */ var antd_lib_affix__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! antd/lib/affix */ "./node_modules/antd/lib/affix/index.js");
+/* harmony import */ var antd_lib_affix__WEBPACK_IMPORTED_MODULE_11___default = /*#__PURE__*/__webpack_require__.n(antd_lib_affix__WEBPACK_IMPORTED_MODULE_11__);
 /* harmony import */ var antd_lib_icon_style_css__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! antd/lib/icon/style/css */ "./node_modules/antd/lib/icon/style/css.js");
 /* harmony import */ var antd_lib_icon_style_css__WEBPACK_IMPORTED_MODULE_12___default = /*#__PURE__*/__webpack_require__.n(antd_lib_icon_style_css__WEBPACK_IMPORTED_MODULE_12__);
 /* harmony import */ var antd_lib_icon__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! antd/lib/icon */ "./node_modules/antd/lib/icon/index.js");
 /* harmony import */ var antd_lib_icon__WEBPACK_IMPORTED_MODULE_13___default = /*#__PURE__*/__webpack_require__.n(antd_lib_icon__WEBPACK_IMPORTED_MODULE_13__);
-/* harmony import */ var antd_lib_message_style_css__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! antd/lib/message/style/css */ "./node_modules/antd/lib/message/style/css.js");
-/* harmony import */ var antd_lib_message_style_css__WEBPACK_IMPORTED_MODULE_14___default = /*#__PURE__*/__webpack_require__.n(antd_lib_message_style_css__WEBPACK_IMPORTED_MODULE_14__);
-/* harmony import */ var antd_lib_message__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(/*! antd/lib/message */ "./node_modules/antd/lib/message/index.js");
-/* harmony import */ var antd_lib_message__WEBPACK_IMPORTED_MODULE_15___default = /*#__PURE__*/__webpack_require__.n(antd_lib_message__WEBPACK_IMPORTED_MODULE_15__);
+/* harmony import */ var antd_lib_menu_style_css__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! antd/lib/menu/style/css */ "./node_modules/antd/lib/menu/style/css.js");
+/* harmony import */ var antd_lib_menu_style_css__WEBPACK_IMPORTED_MODULE_14___default = /*#__PURE__*/__webpack_require__.n(antd_lib_menu_style_css__WEBPACK_IMPORTED_MODULE_14__);
+/* harmony import */ var antd_lib_menu__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(/*! antd/lib/menu */ "./node_modules/antd/lib/menu/index.js");
+/* harmony import */ var antd_lib_menu__WEBPACK_IMPORTED_MODULE_15___default = /*#__PURE__*/__webpack_require__.n(antd_lib_menu__WEBPACK_IMPORTED_MODULE_15__);
 /* harmony import */ var antd_lib_input_style_css__WEBPACK_IMPORTED_MODULE_16__ = __webpack_require__(/*! antd/lib/input/style/css */ "./node_modules/antd/lib/input/style/css.js");
 /* harmony import */ var antd_lib_input_style_css__WEBPACK_IMPORTED_MODULE_16___default = /*#__PURE__*/__webpack_require__.n(antd_lib_input_style_css__WEBPACK_IMPORTED_MODULE_16__);
 /* harmony import */ var antd_lib_input__WEBPACK_IMPORTED_MODULE_17__ = __webpack_require__(/*! antd/lib/input */ "./node_modules/antd/lib/input/index.js");
@@ -28463,10 +28108,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var antd_lib_select__WEBPACK_IMPORTED_MODULE_21___default = /*#__PURE__*/__webpack_require__.n(antd_lib_select__WEBPACK_IMPORTED_MODULE_21__);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_22__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_22___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_22__);
-/* harmony import */ var react_minimal_pie_chart__WEBPACK_IMPORTED_MODULE_23__ = __webpack_require__(/*! react-minimal-pie-chart */ "./node_modules/react-minimal-pie-chart/dist/index.js");
-/* harmony import */ var react_minimal_pie_chart__WEBPACK_IMPORTED_MODULE_23___default = /*#__PURE__*/__webpack_require__.n(react_minimal_pie_chart__WEBPACK_IMPORTED_MODULE_23__);
-/* harmony import */ var _assets_css_style_css__WEBPACK_IMPORTED_MODULE_24__ = __webpack_require__(/*! ../assets/css/style.css */ "./assets/css/style.css");
-/* harmony import */ var _assets_css_style_css__WEBPACK_IMPORTED_MODULE_24___default = /*#__PURE__*/__webpack_require__.n(_assets_css_style_css__WEBPACK_IMPORTED_MODULE_24__);
+/* harmony import */ var _assets_css_style_css__WEBPACK_IMPORTED_MODULE_23__ = __webpack_require__(/*! ../assets/css/style.css */ "./assets/css/style.css");
+/* harmony import */ var _assets_css_style_css__WEBPACK_IMPORTED_MODULE_23___default = /*#__PURE__*/__webpack_require__.n(_assets_css_style_css__WEBPACK_IMPORTED_MODULE_23__);
 
 
 
@@ -28520,16 +28163,580 @@ function _assertThisInitialized(self) { if (self === void 0) { throw new Referen
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
 
-
+// import PieChart from 'react-minimal-pie-chart'
 
 var Option = antd_lib_select__WEBPACK_IMPORTED_MODULE_21___default.a.Option;
 var ButtonGroup = antd_lib_button__WEBPACK_IMPORTED_MODULE_19___default.a.Group;
 var InputGroup = antd_lib_input__WEBPACK_IMPORTED_MODULE_17___default.a.Group;
+var SubMenu = antd_lib_menu__WEBPACK_IMPORTED_MODULE_15___default.a.SubMenu;
 var datacollection = {
   BINANCE: ['BTC/USDT', 'ETH/USDT', 'LTC/USDT', 'XRP/USDT', 'ETH/BTC', 'LTC/BTC', 'XRP/BTC', 'BTG/USDT', 'ETC/USDT', 'BCC/USDT', 'BTG/BTC', 'ETC/BTC', 'XEM/BTC', 'BCC/BTC', 'DASH/BTC'],
   BTCTURK: ['BTC/TRY', 'BTC/USDT', 'ETH/TRY', 'LTC/TRY', 'XRP/TRY', 'USDT/TRY'],
-  KOINEKS: ['BTC/TRY', 'BTC/USDT', 'ETH/TRY', 'LTC/TRY', 'XRP/TRY', 'USDT/TRY', 'DASH/TRY', 'XLM/TRY', 'BTG/TRY', 'ETC/TRY', 'XEM/TRY', 'DOGE/TRY', 'BCH/TRY']
+  KOINEKS: ['BTC/TRY', 'BTC/USDT', 'ETH/TRY', 'LTC/TRY', 'XRP/TRY', 'USDT/TRY', 'DASH/TRY', 'XLM/TRY', 'BTG/TRY', 'ETC/TRY', 'XEM/TRY', 'DOGE/TRY', 'BCH/TRY'] ////////////////////////////////      COMPONENT   >>>>>>    //////////////////////////////////////////
+
 };
+
+var Menubar = function Menubar() {
+  return react__WEBPACK_IMPORTED_MODULE_22___default.a.createElement(antd_lib_affix__WEBPACK_IMPORTED_MODULE_11___default.a, {
+    offsetTop: 0
+  }, react__WEBPACK_IMPORTED_MODULE_22___default.a.createElement(antd_lib_menu__WEBPACK_IMPORTED_MODULE_15___default.a, {
+    selectedKeys: ['exchange'],
+    mode: "horizontal",
+    theme: "dark",
+    style: {
+      padding: '10px 0'
+    }
+  }, react__WEBPACK_IMPORTED_MODULE_22___default.a.createElement(antd_lib_menu__WEBPACK_IMPORTED_MODULE_15___default.a.Item, {
+    key: "exchange"
+  }, react__WEBPACK_IMPORTED_MODULE_22___default.a.createElement("a", {
+    href: "/index"
+  }, react__WEBPACK_IMPORTED_MODULE_22___default.a.createElement(antd_lib_icon__WEBPACK_IMPORTED_MODULE_13___default.a, {
+    type: "appstore"
+  }), "Exchange")), react__WEBPACK_IMPORTED_MODULE_22___default.a.createElement(antd_lib_menu__WEBPACK_IMPORTED_MODULE_15___default.a.Item, {
+    key: "currency"
+  }, react__WEBPACK_IMPORTED_MODULE_22___default.a.createElement("a", {
+    href: "/currency"
+  }, react__WEBPACK_IMPORTED_MODULE_22___default.a.createElement(antd_lib_icon__WEBPACK_IMPORTED_MODULE_13___default.a, {
+    type: "property-safety"
+  }), "Currency")), react__WEBPACK_IMPORTED_MODULE_22___default.a.createElement(antd_lib_menu__WEBPACK_IMPORTED_MODULE_15___default.a.Item, {
+    key: "parity"
+  }, react__WEBPACK_IMPORTED_MODULE_22___default.a.createElement("a", {
+    href: "/parity"
+  }, react__WEBPACK_IMPORTED_MODULE_22___default.a.createElement(antd_lib_icon__WEBPACK_IMPORTED_MODULE_13___default.a, {
+    type: "stock"
+  }), "Parity")), react__WEBPACK_IMPORTED_MODULE_22___default.a.createElement(SubMenu, {
+    style: {
+      float: 'right',
+      padding: 0
+    },
+    title: react__WEBPACK_IMPORTED_MODULE_22___default.a.createElement("span", {
+      className: "submenu-title-wrapper"
+    }, react__WEBPACK_IMPORTED_MODULE_22___default.a.createElement(antd_lib_icon__WEBPACK_IMPORTED_MODULE_13___default.a, {
+      type: "team",
+      style: {
+        fontSize: 20
+      }
+    }))
+  }, react__WEBPACK_IMPORTED_MODULE_22___default.a.createElement(antd_lib_menu__WEBPACK_IMPORTED_MODULE_15___default.a.Item, {
+    key: "user:1",
+    style: {
+      margin: 0,
+      background: '#00101a'
+    }
+  }, react__WEBPACK_IMPORTED_MODULE_22___default.a.createElement(antd_lib_icon__WEBPACK_IMPORTED_MODULE_13___default.a, {
+    type: "user"
+  }), "John"), react__WEBPACK_IMPORTED_MODULE_22___default.a.createElement(antd_lib_menu__WEBPACK_IMPORTED_MODULE_15___default.a.Item, {
+    key: "user:2",
+    style: {
+      margin: 0,
+      background: '#00101a'
+    }
+  }, react__WEBPACK_IMPORTED_MODULE_22___default.a.createElement(antd_lib_icon__WEBPACK_IMPORTED_MODULE_13___default.a, {
+    type: "user"
+  }), "Kerry"), react__WEBPACK_IMPORTED_MODULE_22___default.a.createElement(antd_lib_menu__WEBPACK_IMPORTED_MODULE_15___default.a.Item, {
+    key: "user:3",
+    style: {
+      margin: 0,
+      background: '#00101a'
+    }
+  }, react__WEBPACK_IMPORTED_MODULE_22___default.a.createElement(antd_lib_icon__WEBPACK_IMPORTED_MODULE_13___default.a, {
+    type: "user"
+  }), "Volten"))));
+};
+
+var Headbar = function Headbar(props) {
+  return react__WEBPACK_IMPORTED_MODULE_22___default.a.createElement(antd_lib_row__WEBPACK_IMPORTED_MODULE_5___default.a, null, react__WEBPACK_IMPORTED_MODULE_22___default.a.createElement(antd_lib_col__WEBPACK_IMPORTED_MODULE_7___default.a, {
+    span: 24,
+    style: {
+      padding: 3
+    }
+  }, react__WEBPACK_IMPORTED_MODULE_22___default.a.createElement(ButtonGroup, null, react__WEBPACK_IMPORTED_MODULE_22___default.a.createElement(antd_lib_button__WEBPACK_IMPORTED_MODULE_19___default.a, {
+    icon: "plus",
+    onClick: props.boxadd,
+    disabled: props.selectdisble
+  }), react__WEBPACK_IMPORTED_MODULE_22___default.a.createElement(antd_lib_popconfirm__WEBPACK_IMPORTED_MODULE_9___default.a, {
+    placement: "topLeft",
+    title: "Are you sure to delete this box?",
+    onConfirm: function onConfirm() {
+      return props.boxremove(props.boxkey);
+    },
+    okText: "Yes",
+    cancelText: "No"
+  }, react__WEBPACK_IMPORTED_MODULE_22___default.a.createElement(antd_lib_button__WEBPACK_IMPORTED_MODULE_19___default.a, {
+    icon: "minus",
+    disabled: props.selectdisble
+  }))), react__WEBPACK_IMPORTED_MODULE_22___default.a.createElement(antd_lib_select__WEBPACK_IMPORTED_MODULE_21___default.a, {
+    value: props.parity,
+    style: {
+      width: 120,
+      float: 'right'
+    },
+    onChange: function onChange(e) {
+      return props.parityChange(props.boxkey, e);
+    }
+  }, datacollection[props.exchange].map(function (parity) {
+    return react__WEBPACK_IMPORTED_MODULE_22___default.a.createElement(Option, {
+      value: parity,
+      key: parity
+    }, parity);
+  })), react__WEBPACK_IMPORTED_MODULE_22___default.a.createElement(antd_lib_select__WEBPACK_IMPORTED_MODULE_21___default.a, {
+    value: props.exchange,
+    style: {
+      width: 120,
+      float: 'right',
+      marginRight: 3
+    },
+    onChange: function onChange(e) {
+      return props.exchangeChange(props.boxkey, e);
+    }
+  }, Object.keys(datacollection).map(function (exchange) {
+    return react__WEBPACK_IMPORTED_MODULE_22___default.a.createElement(Option, {
+      value: exchange,
+      key: exchange
+    }, exchange);
+  }))));
+};
+
+var Contentbar = function Contentbar(props) {
+  var EPstate = props.EPstate;
+
+  if (EPstate) {
+    switch (props.exchange) {
+      case 'BINANCE':
+        var Buydata = function Buydata() {
+          return Object.keys(EPstate.depth.bids).slice(0, 18).map(function (item, i) {
+            return react__WEBPACK_IMPORTED_MODULE_22___default.a.createElement("tr", {
+              className: "trrow",
+              key: i
+            }, react__WEBPACK_IMPORTED_MODULE_22___default.a.createElement("td", null, parseFloat(item).toFixed(4)), react__WEBPACK_IMPORTED_MODULE_22___default.a.createElement("td", null, parseFloat(EPstate.depth.bids[item]).toFixed(2)), react__WEBPACK_IMPORTED_MODULE_22___default.a.createElement("td", null, (parseFloat(item).toFixed(4) * parseFloat(EPstate.depth.bids[item]).toFixed(4)).toFixed(2)));
+          });
+        };
+
+        var Selldata = function Selldata() {
+          return Object.keys(EPstate.depth.asks).slice(0, 18).map(function (item, i) {
+            return react__WEBPACK_IMPORTED_MODULE_22___default.a.createElement("tr", {
+              className: "trrow",
+              key: i
+            }, react__WEBPACK_IMPORTED_MODULE_22___default.a.createElement("td", null, parseFloat(item).toFixed(4)), react__WEBPACK_IMPORTED_MODULE_22___default.a.createElement("td", null, parseFloat(EPstate.depth.asks[item]).toFixed(2)), react__WEBPACK_IMPORTED_MODULE_22___default.a.createElement("td", null, (parseFloat(item).toFixed(4) * parseFloat(EPstate.depth.asks[item]).toFixed(4)).toFixed(2)));
+          });
+        };
+
+        if (Object.keys(EPstate.history).length === 0 && EPstate.history.constructor === Object) {
+          var Historydata = function Historydata() {
+            return react__WEBPACK_IMPORTED_MODULE_22___default.a.createElement("tr", null, react__WEBPACK_IMPORTED_MODULE_22___default.a.createElement("td", {
+              colSpan: "3"
+            }, react__WEBPACK_IMPORTED_MODULE_22___default.a.createElement(antd_lib_icon__WEBPACK_IMPORTED_MODULE_13___default.a, {
+              type: "dollar",
+              style: {
+                fontSize: 20,
+                color: '#888'
+              },
+              spin: true
+            }), "So Lazy"));
+          };
+        } else {
+          var Historydata = function Historydata() {
+            return EPstate.history.map(function (item, i) {
+              return react__WEBPACK_IMPORTED_MODULE_22___default.a.createElement("tr", {
+                className: "trrow",
+                key: i
+              }, react__WEBPACK_IMPORTED_MODULE_22___default.a.createElement("td", null, parseFloat(item.p).toFixed(4)), react__WEBPACK_IMPORTED_MODULE_22___default.a.createElement("td", null, parseFloat(item.q).toFixed(2)), react__WEBPACK_IMPORTED_MODULE_22___default.a.createElement("td", null, new Date(item.T * 1000).getHours() + ':' + new Date(item.T * 1000).getMinutes() + ':' + new Date(item.T * 1000).getSeconds()));
+            });
+          };
+        }
+
+        break;
+
+      case 'BTCTURK':
+        var Buydata = function Buydata() {
+          return EPstate.bids.slice(0, 18).map(function (item, i) {
+            return react__WEBPACK_IMPORTED_MODULE_22___default.a.createElement("tr", {
+              className: "trrow",
+              key: i
+            }, react__WEBPACK_IMPORTED_MODULE_22___default.a.createElement("td", null, parseFloat(item[0]).toFixed(4)), react__WEBPACK_IMPORTED_MODULE_22___default.a.createElement("td", null, parseFloat(item[1]).toFixed(2)), react__WEBPACK_IMPORTED_MODULE_22___default.a.createElement("td", null, (parseFloat(item[0]).toFixed(4) * parseFloat(item[1]).toFixed(4)).toFixed(2)));
+          });
+        };
+
+        var Selldata = function Selldata() {
+          return EPstate.asks.slice(0, 18).map(function (item, i) {
+            return react__WEBPACK_IMPORTED_MODULE_22___default.a.createElement("tr", {
+              className: "trrow",
+              key: i
+            }, react__WEBPACK_IMPORTED_MODULE_22___default.a.createElement("td", null, parseFloat(item[0]).toFixed(4)), react__WEBPACK_IMPORTED_MODULE_22___default.a.createElement("td", null, parseFloat(item[1]).toFixed(2)), react__WEBPACK_IMPORTED_MODULE_22___default.a.createElement("td", null, (parseFloat(item[0]).toFixed(4) * parseFloat(item[1]).toFixed(4)).toFixed(2)));
+          });
+        };
+
+        var Historydata = function Historydata() {
+          return props.EPsh.map(function (item, i) {
+            return react__WEBPACK_IMPORTED_MODULE_22___default.a.createElement("tr", {
+              className: "trrow",
+              key: i
+            }, react__WEBPACK_IMPORTED_MODULE_22___default.a.createElement("td", null, parseFloat(item.price).toFixed(4)), react__WEBPACK_IMPORTED_MODULE_22___default.a.createElement("td", null, parseFloat(item.amount).toFixed(2)), react__WEBPACK_IMPORTED_MODULE_22___default.a.createElement("td", null, new Date(item.date).getHours() + ':0' + new Date(item.date).getMinutes() + ':0' + new Date(item.date).getSeconds()));
+          });
+        };
+
+        break;
+
+      case 'KOINEKS':
+        var a = props.parity;
+        var b = a.split('/');
+        var c = b[0];
+
+        var Buydata = function Buydata() {
+          return react__WEBPACK_IMPORTED_MODULE_22___default.a.createElement("tr", {
+            className: "trrow"
+          }, react__WEBPACK_IMPORTED_MODULE_22___default.a.createElement("td", null, parseFloat(EPstate[c].bid).toFixed(4)), react__WEBPACK_IMPORTED_MODULE_22___default.a.createElement("td", null, parseFloat(EPstate[c].change_amount).toFixed(2)), react__WEBPACK_IMPORTED_MODULE_22___default.a.createElement("td", null, (parseFloat(EPstate[c].bid).toFixed(4) * parseFloat(EPstate[c].change_amount)).toFixed(2)));
+        };
+
+        var Selldata = function Selldata() {
+          return react__WEBPACK_IMPORTED_MODULE_22___default.a.createElement("tr", {
+            className: "trrow"
+          }, react__WEBPACK_IMPORTED_MODULE_22___default.a.createElement("td", null, parseFloat(EPstate[c].ask).toFixed(4)), react__WEBPACK_IMPORTED_MODULE_22___default.a.createElement("td", null, parseFloat(EPstate[c].change_amount).toFixed(2)), react__WEBPACK_IMPORTED_MODULE_22___default.a.createElement("td", null, (parseFloat(EPstate[c].ask).toFixed(4) * parseFloat(EPstate[c].change_amount)).toFixed(2)));
+        };
+
+        var Historydata = function Historydata() {
+          return react__WEBPACK_IMPORTED_MODULE_22___default.a.createElement("tr", null, react__WEBPACK_IMPORTED_MODULE_22___default.a.createElement("td", {
+            colSpan: "3"
+          }, "No History Data"));
+        };
+
+        break;
+    }
+  } else {
+    var Buydata = function Buydata() {
+      return react__WEBPACK_IMPORTED_MODULE_22___default.a.createElement("tr", null, react__WEBPACK_IMPORTED_MODULE_22___default.a.createElement("td", {
+        colSpan: "3"
+      }, react__WEBPACK_IMPORTED_MODULE_22___default.a.createElement(antd_lib_icon__WEBPACK_IMPORTED_MODULE_13___default.a, {
+        type: "dollar",
+        style: {
+          fontSize: 20,
+          color: '#888'
+        },
+        spin: true
+      })));
+    };
+
+    var Selldata = Buydata;
+    var Historydata = Buydata;
+  }
+
+  return react__WEBPACK_IMPORTED_MODULE_22___default.a.createElement(antd_lib_row__WEBPACK_IMPORTED_MODULE_5___default.a, {
+    gutter: 3,
+    style: {
+      padding: '0 3px'
+    }
+  }, react__WEBPACK_IMPORTED_MODULE_22___default.a.createElement(antd_lib_col__WEBPACK_IMPORTED_MODULE_7___default.a, {
+    span: 8
+  }, react__WEBPACK_IMPORTED_MODULE_22___default.a.createElement("div", {
+    style: {
+      height: 400,
+      border: 'solid #EEE 1px',
+      textAlign: 'center'
+    }
+  }, react__WEBPACK_IMPORTED_MODULE_22___default.a.createElement("div", {
+    style: {
+      padding: '4px 0',
+      borderBottom: 'solid #1890ff 1px',
+      color: '#1890ff'
+    }
+  }, react__WEBPACK_IMPORTED_MODULE_22___default.a.createElement(antd_lib_icon__WEBPACK_IMPORTED_MODULE_13___default.a, {
+    type: "fork",
+    theme: "outlined",
+    style: {
+      marginRight: 5
+    }
+  }), "Buy Orders"), react__WEBPACK_IMPORTED_MODULE_22___default.a.createElement("div", {
+    style: {
+      height: 370,
+      overflow: 'auto'
+    }
+  }, react__WEBPACK_IMPORTED_MODULE_22___default.a.createElement("table", {
+    cellPadding: "0",
+    cellSpacing: "0"
+  }, react__WEBPACK_IMPORTED_MODULE_22___default.a.createElement("tbody", null, react__WEBPACK_IMPORTED_MODULE_22___default.a.createElement("tr", {
+    className: "trrow head"
+  }, react__WEBPACK_IMPORTED_MODULE_22___default.a.createElement("td", null, "Price"), react__WEBPACK_IMPORTED_MODULE_22___default.a.createElement("td", null, "Amout"), react__WEBPACK_IMPORTED_MODULE_22___default.a.createElement("td", null, "Total")), react__WEBPACK_IMPORTED_MODULE_22___default.a.createElement(Buydata, null), react__WEBPACK_IMPORTED_MODULE_22___default.a.createElement("tr", null, react__WEBPACK_IMPORTED_MODULE_22___default.a.createElement("td", {
+    colSpan: "3"
+  }))))))), react__WEBPACK_IMPORTED_MODULE_22___default.a.createElement(antd_lib_col__WEBPACK_IMPORTED_MODULE_7___default.a, {
+    span: 8
+  }, react__WEBPACK_IMPORTED_MODULE_22___default.a.createElement("div", {
+    style: {
+      height: 400,
+      border: 'solid #EEE 1px',
+      textAlign: 'center'
+    }
+  }, react__WEBPACK_IMPORTED_MODULE_22___default.a.createElement("div", {
+    style: {
+      padding: '4px 0',
+      borderBottom: 'solid #1890ff 1px',
+      color: '#1890ff'
+    }
+  }, react__WEBPACK_IMPORTED_MODULE_22___default.a.createElement(antd_lib_icon__WEBPACK_IMPORTED_MODULE_13___default.a, {
+    type: "fork",
+    theme: "outlined",
+    style: {
+      marginRight: 5
+    }
+  }), "Sell Orders"), react__WEBPACK_IMPORTED_MODULE_22___default.a.createElement("div", {
+    style: {
+      height: 370,
+      overflow: 'auto'
+    }
+  }, react__WEBPACK_IMPORTED_MODULE_22___default.a.createElement("table", {
+    cellPadding: "0",
+    cellSpacing: "0"
+  }, react__WEBPACK_IMPORTED_MODULE_22___default.a.createElement("tbody", null, react__WEBPACK_IMPORTED_MODULE_22___default.a.createElement("tr", {
+    className: "trrow head"
+  }, react__WEBPACK_IMPORTED_MODULE_22___default.a.createElement("td", null, "Price"), react__WEBPACK_IMPORTED_MODULE_22___default.a.createElement("td", null, "Amout"), react__WEBPACK_IMPORTED_MODULE_22___default.a.createElement("td", null, "Total")), react__WEBPACK_IMPORTED_MODULE_22___default.a.createElement(Selldata, null), react__WEBPACK_IMPORTED_MODULE_22___default.a.createElement("tr", null, react__WEBPACK_IMPORTED_MODULE_22___default.a.createElement("td", {
+    colSpan: "3"
+  }))))))), react__WEBPACK_IMPORTED_MODULE_22___default.a.createElement(antd_lib_col__WEBPACK_IMPORTED_MODULE_7___default.a, {
+    span: 8
+  }, react__WEBPACK_IMPORTED_MODULE_22___default.a.createElement("div", {
+    style: {
+      height: 400,
+      border: 'solid #EEE 1px',
+      textAlign: 'center'
+    }
+  }, react__WEBPACK_IMPORTED_MODULE_22___default.a.createElement("div", {
+    style: {
+      padding: '4px 0',
+      borderBottom: 'solid #1890ff 1px',
+      color: '#1890ff'
+    }
+  }, react__WEBPACK_IMPORTED_MODULE_22___default.a.createElement(antd_lib_icon__WEBPACK_IMPORTED_MODULE_13___default.a, {
+    type: "fork",
+    theme: "outlined",
+    style: {
+      marginRight: 5
+    }
+  }), "Order History"), react__WEBPACK_IMPORTED_MODULE_22___default.a.createElement("div", {
+    style: {
+      height: 370,
+      overflow: 'auto'
+    }
+  }, react__WEBPACK_IMPORTED_MODULE_22___default.a.createElement("table", {
+    cellPadding: "0",
+    cellSpacing: "0"
+  }, react__WEBPACK_IMPORTED_MODULE_22___default.a.createElement("tbody", null, react__WEBPACK_IMPORTED_MODULE_22___default.a.createElement("tr", {
+    className: "trrow head"
+  }, react__WEBPACK_IMPORTED_MODULE_22___default.a.createElement("td", null, "Price"), react__WEBPACK_IMPORTED_MODULE_22___default.a.createElement("td", null, "Amout"), react__WEBPACK_IMPORTED_MODULE_22___default.a.createElement("td", null, "Time")), react__WEBPACK_IMPORTED_MODULE_22___default.a.createElement(Historydata, null), react__WEBPACK_IMPORTED_MODULE_22___default.a.createElement("tr", null, react__WEBPACK_IMPORTED_MODULE_22___default.a.createElement("td", {
+    colSpan: "3"
+  }))))))));
+};
+
+var Chartbar = function Chartbar(props) {
+  var EPstate = props.EPstate;
+
+  if (EPstate) {
+    var piecolors = ['#ff7202', '#5ca536'];
+
+    switch (props.exchange) {
+      case 'BINANCE':
+        var Piechart = function Piechart() {
+          return react__WEBPACK_IMPORTED_MODULE_22___default.a.createElement(Pie, {
+            data: [5000, parseFloat(Object.keys(EPstate.depth.bids)[0])],
+            radius: 60,
+            hole: 0,
+            colors: piecolors,
+            strokeWidth: 3,
+            labels: true
+          });
+        };
+
+        break;
+
+      case 'BTCTURK':
+        var Piechart = function Piechart() {
+          return react__WEBPACK_IMPORTED_MODULE_22___default.a.createElement(Pie, {
+            data: [5000, parseFloat(EPstate.bids[0][0])],
+            radius: 60,
+            hole: 0,
+            colors: piecolors,
+            strokeWidth: 3,
+            labels: true
+          });
+        };
+
+        break;
+
+      case 'KOINEKS':
+        var a = props.parity;
+        var b = a.split('/');
+        var c = b[0];
+
+        var Piechart = function Piechart() {
+          return react__WEBPACK_IMPORTED_MODULE_22___default.a.createElement(Pie, {
+            data: [5000, parseFloat(EPstate[c].bid)],
+            radius: 60,
+            hole: 0,
+            colors: piecolors,
+            strokeWidth: 3,
+            labels: true
+          });
+        };
+
+        break;
+
+      default:
+        var Piechart = function Piechart() {
+          return react__WEBPACK_IMPORTED_MODULE_22___default.a.createElement(antd_lib_icon__WEBPACK_IMPORTED_MODULE_13___default.a, {
+            type: "dollar",
+            style: {
+              fontSize: 20,
+              color: '#888',
+              marginTop: 50
+            },
+            spin: true
+          });
+        };
+
+    }
+  } else {
+    var Piechart = function Piechart() {
+      return react__WEBPACK_IMPORTED_MODULE_22___default.a.createElement(antd_lib_icon__WEBPACK_IMPORTED_MODULE_13___default.a, {
+        type: "dollar",
+        style: {
+          fontSize: 20,
+          color: '#888',
+          marginTop: 50
+        },
+        spin: true
+      });
+    };
+  }
+
+  return react__WEBPACK_IMPORTED_MODULE_22___default.a.createElement(antd_lib_row__WEBPACK_IMPORTED_MODULE_5___default.a, {
+    style: {
+      padding: '20px 0'
+    }
+  }, react__WEBPACK_IMPORTED_MODULE_22___default.a.createElement(antd_lib_col__WEBPACK_IMPORTED_MODULE_7___default.a, {
+    span: 7,
+    style: {
+      textAlign: 'center'
+    }
+  }, react__WEBPACK_IMPORTED_MODULE_22___default.a.createElement(Piechart, null)), react__WEBPACK_IMPORTED_MODULE_22___default.a.createElement(antd_lib_col__WEBPACK_IMPORTED_MODULE_7___default.a, {
+    span: 11
+  }, react__WEBPACK_IMPORTED_MODULE_22___default.a.createElement("ul", {
+    style: {
+      height: 27,
+      marginBottom: 0
+    }
+  }, react__WEBPACK_IMPORTED_MODULE_22___default.a.createElement("li", {
+    style: {
+      width: '50%',
+      float: 'left',
+      whiteSpace: 'nowrap',
+      overflow: 'hidden',
+      textOverflow: 'ellipsis'
+    }
+  }, "balance warning"), react__WEBPACK_IMPORTED_MODULE_22___default.a.createElement("li", {
+    style: {
+      width: '50%',
+      float: 'left'
+    }
+  }, react__WEBPACK_IMPORTED_MODULE_22___default.a.createElement(antd_lib_input_number__WEBPACK_IMPORTED_MODULE_3___default.a, {
+    defaultValue: 100,
+    formatter: function formatter(value) {
+      return "$ ".concat(value).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+    },
+    parser: function parser(value) {
+      return value.replace(/\$\s?|(,*)/g, '');
+    },
+    style: {
+      width: '100%'
+    },
+    size: "small"
+  }))), react__WEBPACK_IMPORTED_MODULE_22___default.a.createElement("ul", {
+    style: {
+      height: 27,
+      marginBottom: 0
+    }
+  }, react__WEBPACK_IMPORTED_MODULE_22___default.a.createElement("li", {
+    style: {
+      width: '50%',
+      float: 'left',
+      whiteSpace: 'nowrap',
+      overflow: 'hidden',
+      textOverflow: 'ellipsis'
+    }
+  }, "ratio warning %"), react__WEBPACK_IMPORTED_MODULE_22___default.a.createElement("li", {
+    style: {
+      width: '50%',
+      float: 'left'
+    }
+  }, react__WEBPACK_IMPORTED_MODULE_22___default.a.createElement(antd_lib_input_number__WEBPACK_IMPORTED_MODULE_3___default.a, {
+    defaultValue: 1.5,
+    min: 0,
+    max: 100,
+    formatter: function formatter(value) {
+      return "".concat(value, "%");
+    },
+    parser: function parser(value) {
+      return value.replace('%', '');
+    },
+    step: .1,
+    style: {
+      width: '100%'
+    },
+    size: "small",
+    key: "special"
+  }))), react__WEBPACK_IMPORTED_MODULE_22___default.a.createElement("ul", {
+    style: {
+      height: 27,
+      marginBottom: 0
+    }
+  }, react__WEBPACK_IMPORTED_MODULE_22___default.a.createElement("li", {
+    style: {
+      width: '50%',
+      float: 'left',
+      whiteSpace: 'nowrap',
+      overflow: 'hidden',
+      textOverflow: 'ellipsis'
+    }
+  }, "API key"), react__WEBPACK_IMPORTED_MODULE_22___default.a.createElement("li", {
+    style: {
+      width: '50%',
+      float: 'left'
+    }
+  }, react__WEBPACK_IMPORTED_MODULE_22___default.a.createElement(antd_lib_input__WEBPACK_IMPORTED_MODULE_17___default.a, {
+    size: "small"
+  }))), react__WEBPACK_IMPORTED_MODULE_22___default.a.createElement("ul", {
+    style: {
+      height: 27,
+      marginBottom: 0
+    }
+  }, react__WEBPACK_IMPORTED_MODULE_22___default.a.createElement("li", {
+    style: {
+      width: '50%',
+      float: 'left',
+      whiteSpace: 'nowrap',
+      overflow: 'hidden',
+      textOverflow: 'ellipsis'
+    }
+  }, "Secret key"), react__WEBPACK_IMPORTED_MODULE_22___default.a.createElement("li", {
+    style: {
+      width: '50%',
+      float: 'left'
+    }
+  }, react__WEBPACK_IMPORTED_MODULE_22___default.a.createElement(antd_lib_input__WEBPACK_IMPORTED_MODULE_17___default.a, {
+    size: "small"
+  }))), react__WEBPACK_IMPORTED_MODULE_22___default.a.createElement(InputGroup, {
+    compact: true
+  }, react__WEBPACK_IMPORTED_MODULE_22___default.a.createElement(antd_lib_input__WEBPACK_IMPORTED_MODULE_17___default.a, {
+    placeholder: props.parity.split('/')[0] + ' key',
+    style: {
+      width: '50%'
+    }
+  }), react__WEBPACK_IMPORTED_MODULE_22___default.a.createElement(antd_lib_input__WEBPACK_IMPORTED_MODULE_17___default.a, {
+    placeholder: props.parity.split('/')[1] + ' key',
+    style: {
+      width: '50%'
+    }
+  }))), react__WEBPACK_IMPORTED_MODULE_22___default.a.createElement(antd_lib_col__WEBPACK_IMPORTED_MODULE_7___default.a, {
+    span: 6
+  }));
+}; ////////////////////////////////  COMPONENT   <<<<<<       //////////////////////////////////////////
+
 
 var _default =
 /*#__PURE__*/
@@ -28550,21 +28757,13 @@ function (_Component) {
     _this = _possibleConstructorReturn(this, (_getPrototypeOf2 = _getPrototypeOf(_default)).call.apply(_getPrototypeOf2, [this].concat(args)));
 
     _defineProperty(_assertThisInitialized(_assertThisInitialized(_this)), "state", {
-      affixtop: 10,
-      menukey: 'exchange',
       selectdisble: true,
-      // Initial One
+      // Initial
       exchangeboxes: ['BINANCE'],
-      parities: ['BTC/USDT'],
-      balances: [100],
-      ratios: [1.5],
-      piedata: [[5000, 5000]],
-      piecolors: ['#ff7202', '#5ca536']
+      parities: ['BTC/USDT']
     });
 
     _defineProperty(_assertThisInitialized(_assertThisInitialized(_this)), "boxadd", function () {
-      antd_lib_message__WEBPACK_IMPORTED_MODULE_15___default.a.success('A new box created.');
-
       var T = _this.state.exchangeboxes;
       var P = _this.state.parities;
       var isNew = false;
@@ -28587,31 +28786,19 @@ function (_Component) {
         P.push(datacollection['BINANCE'][0]);
       }
 
-      var B = _this.state.balances;
-      B.push(100);
-      var R = _this.state.ratios;
-      R.push(1.5);
-
       _this.setState({
         exchangeboxes: T,
-        parities: P,
-        balances: B,
-        ratios: R
+        parities: P
       });
 
-      var C = _this.state.piedata;
-      C.push([5000, 5000]);
-
-      _this.setState({
-        piedata: C
-      });
+      antd_lib_message__WEBPACK_IMPORTED_MODULE_1___default.a.success('A new box created.');
     });
 
     _defineProperty(_assertThisInitialized(_assertThisInitialized(_this)), "boxremove", function (boxkey) {
       var T = _this.state.exchangeboxes;
 
       if (T.length == 1) {
-        antd_lib_message__WEBPACK_IMPORTED_MODULE_15___default.a.warning('Sorry. The last box cannot be removed.');
+        antd_lib_message__WEBPACK_IMPORTED_MODULE_1___default.a.warning('Sorry. The last box cannot be removed.');
 
         return;
       }
@@ -28619,22 +28806,13 @@ function (_Component) {
       T.splice(boxkey, 1);
       var P = _this.state.parities;
       P.splice(boxkey, 1);
-      var B = _this.state.balances;
-      B.splice(boxkey, 1);
-      var R = _this.state.ratios;
-      R.splice(boxkey, 1);
-      var C = _this.state.piedata;
-      C.splice(boxkey, 1);
 
       _this.setState({
         exchangeboxes: T,
-        parities: P,
-        balances: B,
-        ratios: R,
-        piedata: C
+        parities: P
       });
 
-      antd_lib_message__WEBPACK_IMPORTED_MODULE_15___default.a.success('The selected box removed.');
+      antd_lib_message__WEBPACK_IMPORTED_MODULE_1___default.a.success('The selected box removed.');
     });
 
     _defineProperty(_assertThisInitialized(_assertThisInitialized(_this)), "exchangeChange", function (boxkey, value) {
@@ -28664,15 +28842,23 @@ function (_Component) {
                 res1 = _ref2[0],
                 res2 = _ref2[1];
 
-            return Promise.all([res1.json(), res2.json()]);
+            if (res1.status >= 400 && res1.status < 600 || res2.status >= 400 && res2.status < 600) {
+              return;
+            } else {
+              return Promise.all([res1.json(), res2.json()]);
+            }
           }).then(function (_ref3) {
-            var _this$setState2;
-
             var _ref4 = _slicedToArray(_ref3, 2),
                 data1 = _ref4[0],
                 data2 = _ref4[1];
 
-            return _this.setState((_this$setState2 = {}, _defineProperty(_this$setState2, value + datacollection[value][0].replace('/', '_'), data1), _defineProperty(_this$setState2, value + datacollection[value][0].replace('/', '_') + 'history', data2), _this$setState2));
+            if (data1 == null || data2 == null) {
+              return;
+            } else {
+              var _this$setState2;
+
+              _this.setState((_this$setState2 = {}, _defineProperty(_this$setState2, value + datacollection[value][0].replace('/', '_'), data1), _defineProperty(_this$setState2, value + datacollection[value][0].replace('/', '_') + 'history', data2), _this$setState2));
+            }
           });
           break;
 
@@ -28710,16 +28896,24 @@ function (_Component) {
                 res1 = _ref6[0],
                 res2 = _ref6[1];
 
-            return Promise.all([res1.json(), res2.json()]);
+            if (res1.status >= 400 && res1.status < 600 || res2.status >= 400 && res2.status < 600) {
+              return;
+            } else {
+              return Promise.all([res1.json(), res2.json()]);
+            }
           }).then(function (_ref7) {
-            var _this$setState5;
-
             var _ref8 = _slicedToArray(_ref7, 2),
                 data1 = _ref8[0],
                 data2 = _ref8[1];
 
-            return _this.setState((_this$setState5 = {}, _defineProperty(_this$setState5, _this.state.exchangeboxes[boxkey] + value.replace('/', '_'), data1), _defineProperty(_this$setState5, _this.state.exchangeboxes[boxkey] + value.replace('/', '_') + 'history', data2), _this$setState5));
-          });
+            if (data1 == null || data2 == null) {
+              return;
+            } else {
+              var _this$setState5;
+
+              return _this.setState((_this$setState5 = {}, _defineProperty(_this$setState5, _this.state.exchangeboxes[boxkey] + value.replace('/', '_'), data1), _defineProperty(_this$setState5, _this.state.exchangeboxes[boxkey] + value.replace('/', '_') + 'history', data2), _this$setState5));
+            }
+          }).catch(function (error) {});
           break;
 
         case 'KOINEKS':
@@ -28732,53 +28926,11 @@ function (_Component) {
       }
     });
 
-    _defineProperty(_assertThisInitialized(_assertThisInitialized(_this)), "balanceChange", function (boxkey, value) {
-      var T = _this.state.balances;
-      T[boxkey] = value;
-
-      _this.setState({
-        balances: T
-      });
-    });
-
-    _defineProperty(_assertThisInitialized(_assertThisInitialized(_this)), "ratioChange", function (boxkey, value) {
-      var T = _this.state.ratios;
-      T[boxkey] = value;
-
-      _this.setState({
-        ratios: T
-      });
-    });
-
     _defineProperty(_assertThisInitialized(_assertThisInitialized(_this)), "fiveInterval", function () {
       var array = [];
 
       for (var i = 0; i < _this.state.exchangeboxes.length; i++) {
-        array.push(_defineProperty({}, _this.state.exchangeboxes[i], _this.state.parities[i])); ////
-
-        var parity = _this.state.parities[i].replace('/', '_');
-
-        var T = _this.state.piedata;
-
-        switch (_this.state.exchangeboxes[i]) {
-          case 'BINANCE':
-            T[i] = [5000, parseFloat(Object.keys(_this.state['BINANCE' + parity].depth.bids)[7])];
-            break;
-
-          case 'BTCTURK':
-            T[i] = [5000, parseFloat(_this.state['BTCTURK' + parity].bids[7][0])];
-            break;
-
-          case 'KOINEKS':
-            var a = parity.split('_');
-            var b = a[0];
-            T[i] = [5000, parseFloat(_this.state['KOINEKS' + parity][b].bid)];
-            break;
-        }
-
-        _this.setState({
-          piedata: T
-        });
+        array.push(_defineProperty({}, _this.state.exchangeboxes[i], _this.state.parities[i]));
       }
 
       var uniquearray = [];
@@ -28823,18 +28975,24 @@ function (_Component) {
                   res1 = _ref10[0],
                   res2 = _ref10[1];
 
-              return Promise.all([res1.json(), res2.json()]);
+              if (res1.status >= 400 && res1.status < 600 || res2.status >= 400 && res2.status < 600) {
+                return;
+              } else {
+                return Promise.all([res1.json(), res2.json()]);
+              }
             }).then(function (_ref11) {
-              var _this$setState8;
-
               var _ref12 = _slicedToArray(_ref11, 2),
                   data1 = _ref12[0],
                   data2 = _ref12[1];
 
-              return _this.setState((_this$setState8 = {}, _defineProperty(_this$setState8, 'BTCTURK' + item[key].replace('/', '_'), data1), _defineProperty(_this$setState8, 'BTCTURK' + item[key].replace('/', '_') + 'history', data2), _this$setState8));
-            }).catch(function (error) {
-              console.error(error);
-            });
+              if (data1 == null || data2 == null) {
+                return;
+              } else {
+                var _this$setState8;
+
+                return _this.setState((_this$setState8 = {}, _defineProperty(_this$setState8, 'BTCTURK' + item[key].replace('/', '_'), data1), _defineProperty(_this$setState8, 'BTCTURK' + item[key].replace('/', '_') + 'history', data2), _this$setState8));
+              }
+            }).catch(function (error) {});
             break;
 
           case 'KOINEKS':
@@ -28871,9 +29029,7 @@ function (_Component) {
             data4 = _ref16[3];
 
         return _this.setState((_this$setState10 = {}, _defineProperty(_this$setState10, 'BINANCE' + datacollection['BINANCE'][0].replace('/', '_'), data1), _defineProperty(_this$setState10, 'BTCTURK' + datacollection['BTCTURK'][0].replace('/', '_'), data2), _defineProperty(_this$setState10, 'BTCTURK' + datacollection['BTCTURK'][0].replace('/', '_') + 'history', data3), _defineProperty(_this$setState10, 'KOINEKS' + datacollection['KOINEKS'][0].replace('/', '_'), data4), _this$setState10));
-      }).catch(function (error) {
-        console.error(error);
-      }); // /binance-depth/BTCUSDT
+      }).catch(function (error) {}); // /binance-depth/BTCUSDT
       // https://www.btcturk.com/api/orderbook?pairSymbol=BTCTRY
       // https://www.btcturk.com/api/trades?pairSymbol=BTCTRY&last=18
       // https://cors.io/?https://koineks.com/ticker
@@ -28906,515 +29062,24 @@ function (_Component) {
     value: function render() {
       var _this2 = this;
 
-      ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-      ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-      /////////////////////////////////////////////////                COMPONENTS DEFINITION                  ////////////////////////////////////////////////////
-      ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-      ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-      //  MENU BAR  //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-      var Menubar = function Menubar() {
-        return react__WEBPACK_IMPORTED_MODULE_22___default.a.createElement(antd_lib_affix__WEBPACK_IMPORTED_MODULE_9___default.a, {
-          offsetTop: _this2.state.affixtop
-        }, react__WEBPACK_IMPORTED_MODULE_22___default.a.createElement(antd_lib_menu__WEBPACK_IMPORTED_MODULE_11___default.a, {
-          selectedKeys: [_this2.state.menukey],
-          mode: "horizontal",
-          theme: "dark"
-        }, react__WEBPACK_IMPORTED_MODULE_22___default.a.createElement(antd_lib_menu__WEBPACK_IMPORTED_MODULE_11___default.a.Item, {
-          key: "exchange"
-        }, react__WEBPACK_IMPORTED_MODULE_22___default.a.createElement("a", {
-          href: "/index"
-        }, react__WEBPACK_IMPORTED_MODULE_22___default.a.createElement(antd_lib_icon__WEBPACK_IMPORTED_MODULE_13___default.a, {
-          type: "appstore"
-        }), "Exchange", _this2.state.TEST)), react__WEBPACK_IMPORTED_MODULE_22___default.a.createElement(antd_lib_menu__WEBPACK_IMPORTED_MODULE_11___default.a.Item, {
-          key: "currency"
-        }, react__WEBPACK_IMPORTED_MODULE_22___default.a.createElement("a", {
-          href: "/currency"
-        }, react__WEBPACK_IMPORTED_MODULE_22___default.a.createElement(antd_lib_icon__WEBPACK_IMPORTED_MODULE_13___default.a, {
-          type: "property-safety"
-        }), "Currency")), react__WEBPACK_IMPORTED_MODULE_22___default.a.createElement(antd_lib_menu__WEBPACK_IMPORTED_MODULE_11___default.a.Item, {
-          key: "parity"
-        }, react__WEBPACK_IMPORTED_MODULE_22___default.a.createElement("a", {
-          href: "/parity"
-        }, react__WEBPACK_IMPORTED_MODULE_22___default.a.createElement(antd_lib_icon__WEBPACK_IMPORTED_MODULE_13___default.a, {
-          type: "stock"
-        }), "Parity"))));
-      }; //  HEAD COMPONENT  //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-
-      var Headbar = function Headbar(props) {
-        return react__WEBPACK_IMPORTED_MODULE_22___default.a.createElement(antd_lib_row__WEBPACK_IMPORTED_MODULE_3___default.a, null, react__WEBPACK_IMPORTED_MODULE_22___default.a.createElement(antd_lib_col__WEBPACK_IMPORTED_MODULE_5___default.a, {
-          span: 24,
-          style: {
-            padding: 3
-          }
-        }, react__WEBPACK_IMPORTED_MODULE_22___default.a.createElement(ButtonGroup, null, react__WEBPACK_IMPORTED_MODULE_22___default.a.createElement(antd_lib_button__WEBPACK_IMPORTED_MODULE_19___default.a, {
-          icon: "plus",
-          onClick: _this2.boxadd,
-          disabled: _this2.state.selectdisble
-        }), react__WEBPACK_IMPORTED_MODULE_22___default.a.createElement(antd_lib_popconfirm__WEBPACK_IMPORTED_MODULE_7___default.a, {
-          placement: "topLeft",
-          title: "Are you sure to delete this box?",
-          onConfirm: function onConfirm() {
-            return _this2.boxremove(props.boxkey);
-          },
-          okText: "Yes",
-          cancelText: "No"
-        }, react__WEBPACK_IMPORTED_MODULE_22___default.a.createElement(antd_lib_button__WEBPACK_IMPORTED_MODULE_19___default.a, {
-          icon: "minus",
-          disabled: _this2.state.selectdisble
-        }))), react__WEBPACK_IMPORTED_MODULE_22___default.a.createElement(antd_lib_select__WEBPACK_IMPORTED_MODULE_21___default.a, {
-          value: _this2.state.parities[props.boxkey],
-          style: {
-            width: 120,
-            float: 'right'
-          },
-          onChange: function onChange(e) {
-            return _this2.parityChange(props.boxkey, e);
-          },
-          disabled: _this2.state.selectdisble
-        }, datacollection[props.exchange].map(function (parity) {
-          return react__WEBPACK_IMPORTED_MODULE_22___default.a.createElement(Option, {
-            key: parity
-          }, parity);
-        })), react__WEBPACK_IMPORTED_MODULE_22___default.a.createElement(antd_lib_select__WEBPACK_IMPORTED_MODULE_21___default.a, {
-          value: _this2.state.exchangeboxes[props.boxkey],
-          style: {
-            width: 120,
-            float: 'right',
-            marginRight: 3
-          },
-          onChange: function onChange(e) {
-            return _this2.exchangeChange(props.boxkey, e);
-          },
-          disabled: _this2.state.selectdisble
-        }, Object.keys(datacollection).map(function (exchange) {
-          return react__WEBPACK_IMPORTED_MODULE_22___default.a.createElement(Option, {
-            value: exchange,
-            key: exchange
-          }, exchange);
-        }))));
-      }; //  CONTENT COMPONENT  //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-
-      var Contentbar = function Contentbar(props) {
-        var EP = props.exchange + _this2.state.parities[props.boxkey].replace('/', '_');
-
-        if (_this2.state[EP]) {
-          if (props.exchange == 'BINANCE') {
-            var Buydata = function Buydata() {
-              return Object.keys(_this2.state[EP].depth.bids).slice(0, 18).map(function (item, i) {
-                return react__WEBPACK_IMPORTED_MODULE_22___default.a.createElement("tr", {
-                  className: "trrow",
-                  key: i
-                }, react__WEBPACK_IMPORTED_MODULE_22___default.a.createElement("td", null, parseFloat(item).toFixed(2)), react__WEBPACK_IMPORTED_MODULE_22___default.a.createElement("td", null, parseFloat(_this2.state[EP].depth.bids[item]).toFixed(4)), react__WEBPACK_IMPORTED_MODULE_22___default.a.createElement("td", null, (parseFloat(item).toFixed(2) * parseFloat(_this2.state[EP].depth.bids[item]).toFixed(4)).toFixed(2)));
-              });
-            };
-
-            var Selldata = function Selldata() {
-              return Object.keys(_this2.state[EP].depth.asks).slice(0, 18).map(function (item, i) {
-                return react__WEBPACK_IMPORTED_MODULE_22___default.a.createElement("tr", {
-                  className: "trrow",
-                  key: i
-                }, react__WEBPACK_IMPORTED_MODULE_22___default.a.createElement("td", null, parseFloat(item).toFixed(2)), react__WEBPACK_IMPORTED_MODULE_22___default.a.createElement("td", null, parseFloat(_this2.state[EP].depth.asks[item]).toFixed(4)), react__WEBPACK_IMPORTED_MODULE_22___default.a.createElement("td", null, (parseFloat(item).toFixed(2) * parseFloat(_this2.state[EP].depth.asks[item]).toFixed(4)).toFixed(2)));
-              });
-            };
-
-            if (Object.keys(_this2.state[EP].history).length === 0 && _this2.state[EP].history.constructor === Object) {
-              var Historydata = function Historydata() {
-                return react__WEBPACK_IMPORTED_MODULE_22___default.a.createElement("tr", null, react__WEBPACK_IMPORTED_MODULE_22___default.a.createElement("td", {
-                  colSpan: "3"
-                }, react__WEBPACK_IMPORTED_MODULE_22___default.a.createElement(antd_lib_icon__WEBPACK_IMPORTED_MODULE_13___default.a, {
-                  type: "loading-3-quarters",
-                  style: {
-                    fontSize: 20,
-                    color: '#888'
-                  },
-                  spin: true
-                }), "So Lazy"));
-              };
-            } else {
-              var Historydata = function Historydata() {
-                return _this2.state[EP].history.map(function (item, i) {
-                  return react__WEBPACK_IMPORTED_MODULE_22___default.a.createElement("tr", {
-                    className: "trrow",
-                    key: i
-                  }, react__WEBPACK_IMPORTED_MODULE_22___default.a.createElement("td", null, parseFloat(item.p).toFixed(2)), react__WEBPACK_IMPORTED_MODULE_22___default.a.createElement("td", null, parseFloat(item.q).toFixed(4)), react__WEBPACK_IMPORTED_MODULE_22___default.a.createElement("td", null, new Date(item.T * 1000).getHours() + ':' + new Date(item.T * 1000).getMinutes() + ':' + new Date(item.T * 1000).getSeconds()));
-                });
-              };
-            }
-          } else if (props.exchange == 'BTCTURK') {
-            var Buydata = function Buydata() {
-              return _this2.state[EP].bids.slice(0, 18).map(function (item, i) {
-                return react__WEBPACK_IMPORTED_MODULE_22___default.a.createElement("tr", {
-                  className: "trrow",
-                  key: i
-                }, react__WEBPACK_IMPORTED_MODULE_22___default.a.createElement("td", null, parseFloat(item[0]).toFixed(2)), react__WEBPACK_IMPORTED_MODULE_22___default.a.createElement("td", null, parseFloat(item[1]).toFixed(4)), react__WEBPACK_IMPORTED_MODULE_22___default.a.createElement("td", null, (parseFloat(item[0]).toFixed(2) * parseFloat(item[1]).toFixed(4)).toFixed(2)));
-              });
-            };
-
-            var Selldata = function Selldata() {
-              return _this2.state[EP].asks.slice(0, 18).map(function (item, i) {
-                return react__WEBPACK_IMPORTED_MODULE_22___default.a.createElement("tr", {
-                  className: "trrow",
-                  key: i
-                }, react__WEBPACK_IMPORTED_MODULE_22___default.a.createElement("td", null, parseFloat(item[0]).toFixed(2)), react__WEBPACK_IMPORTED_MODULE_22___default.a.createElement("td", null, parseFloat(item[1]).toFixed(4)), react__WEBPACK_IMPORTED_MODULE_22___default.a.createElement("td", null, (parseFloat(item[0]).toFixed(2) * parseFloat(item[1]).toFixed(4)).toFixed(2)));
-              });
-            };
-
-            var Historydata = function Historydata() {
-              return _this2.state[EP + 'history'].map(function (item, i) {
-                return react__WEBPACK_IMPORTED_MODULE_22___default.a.createElement("tr", {
-                  className: "trrow",
-                  key: i
-                }, react__WEBPACK_IMPORTED_MODULE_22___default.a.createElement("td", null, parseFloat(item.price).toFixed(2)), react__WEBPACK_IMPORTED_MODULE_22___default.a.createElement("td", null, parseFloat(item.amount).toFixed(4)), react__WEBPACK_IMPORTED_MODULE_22___default.a.createElement("td", null, new Date(item.date).getHours() + ':0' + new Date(item.date).getMinutes() + ':0' + new Date(item.date).getSeconds()));
-              });
-            };
-          } else if (props.exchange == 'KOINEKS') {
-            var a = _this2.state.parities[props.boxkey];
-            var b = a.split('/');
-            var c = b[0];
-
-            var Buydata = function Buydata() {
-              return react__WEBPACK_IMPORTED_MODULE_22___default.a.createElement("tr", {
-                className: "trrow"
-              }, react__WEBPACK_IMPORTED_MODULE_22___default.a.createElement("td", null, parseFloat(_this2.state[EP][c].bid).toFixed(2)), react__WEBPACK_IMPORTED_MODULE_22___default.a.createElement("td", null, parseFloat(_this2.state[EP][c].change_amount).toFixed(4)), react__WEBPACK_IMPORTED_MODULE_22___default.a.createElement("td", null, (parseFloat(_this2.state[EP][c].bid).toFixed(2) * parseFloat(_this2.state[EP][c].change_amount)).toFixed(2)));
-            };
-
-            var Selldata = function Selldata() {
-              return react__WEBPACK_IMPORTED_MODULE_22___default.a.createElement("tr", {
-                className: "trrow"
-              }, react__WEBPACK_IMPORTED_MODULE_22___default.a.createElement("td", null, parseFloat(_this2.state[EP][c].ask).toFixed(2)), react__WEBPACK_IMPORTED_MODULE_22___default.a.createElement("td", null, parseFloat(_this2.state[EP][c].change_amount).toFixed(4)), react__WEBPACK_IMPORTED_MODULE_22___default.a.createElement("td", null, (parseFloat(_this2.state[EP][c].ask).toFixed(2) * parseFloat(_this2.state[EP][c].change_amount)).toFixed(2)));
-            };
-
-            var Historydata = function Historydata() {
-              return react__WEBPACK_IMPORTED_MODULE_22___default.a.createElement("tr", null, react__WEBPACK_IMPORTED_MODULE_22___default.a.createElement("td", {
-                colSpan: "3"
-              }, "No History Data"));
-            };
-          }
-        } else {
-          var Buydata = function Buydata() {
-            return react__WEBPACK_IMPORTED_MODULE_22___default.a.createElement("tr", null, react__WEBPACK_IMPORTED_MODULE_22___default.a.createElement("td", {
-              colSpan: "3"
-            }, react__WEBPACK_IMPORTED_MODULE_22___default.a.createElement(antd_lib_icon__WEBPACK_IMPORTED_MODULE_13___default.a, {
-              type: "loading-3-quarters",
-              style: {
-                fontSize: 20,
-                color: '#888'
-              },
-              spin: true
-            })));
-          };
-
-          var Selldata = Buydata;
-          var Historydata = Buydata;
-        }
-
-        return react__WEBPACK_IMPORTED_MODULE_22___default.a.createElement(antd_lib_row__WEBPACK_IMPORTED_MODULE_3___default.a, {
-          gutter: 3,
-          style: {
-            padding: '0 3px'
-          }
-        }, react__WEBPACK_IMPORTED_MODULE_22___default.a.createElement(antd_lib_col__WEBPACK_IMPORTED_MODULE_5___default.a, {
-          span: 8
-        }, react__WEBPACK_IMPORTED_MODULE_22___default.a.createElement("div", {
-          style: {
-            height: 400,
-            border: 'solid #EEE 1px',
-            textAlign: 'center'
-          }
-        }, react__WEBPACK_IMPORTED_MODULE_22___default.a.createElement("div", {
-          style: {
-            padding: '4px 0',
-            borderBottom: 'solid #1890ff 1px',
-            color: '#1890ff'
-          }
-        }, react__WEBPACK_IMPORTED_MODULE_22___default.a.createElement(antd_lib_icon__WEBPACK_IMPORTED_MODULE_13___default.a, {
-          type: "fork",
-          theme: "outlined",
-          style: {
-            marginRight: 5
-          }
-        }), "Buy Orders"), react__WEBPACK_IMPORTED_MODULE_22___default.a.createElement("div", {
-          style: {
-            height: 370,
-            overflow: 'auto'
-          }
-        }, react__WEBPACK_IMPORTED_MODULE_22___default.a.createElement("table", {
-          cellPadding: "0",
-          cellSpacing: "0"
-        }, react__WEBPACK_IMPORTED_MODULE_22___default.a.createElement("tbody", null, react__WEBPACK_IMPORTED_MODULE_22___default.a.createElement("tr", {
-          className: "trrow head"
-        }, react__WEBPACK_IMPORTED_MODULE_22___default.a.createElement("td", null, "Price"), react__WEBPACK_IMPORTED_MODULE_22___default.a.createElement("td", null, "Amout"), react__WEBPACK_IMPORTED_MODULE_22___default.a.createElement("td", null, "Total")), react__WEBPACK_IMPORTED_MODULE_22___default.a.createElement(Buydata, null), react__WEBPACK_IMPORTED_MODULE_22___default.a.createElement("tr", null, react__WEBPACK_IMPORTED_MODULE_22___default.a.createElement("td", {
-          colSpan: "3"
-        }))))))), react__WEBPACK_IMPORTED_MODULE_22___default.a.createElement(antd_lib_col__WEBPACK_IMPORTED_MODULE_5___default.a, {
-          span: 8
-        }, react__WEBPACK_IMPORTED_MODULE_22___default.a.createElement("div", {
-          style: {
-            height: 400,
-            border: 'solid #EEE 1px',
-            textAlign: 'center'
-          }
-        }, react__WEBPACK_IMPORTED_MODULE_22___default.a.createElement("div", {
-          style: {
-            padding: '4px 0',
-            borderBottom: 'solid #1890ff 1px',
-            color: '#1890ff'
-          }
-        }, react__WEBPACK_IMPORTED_MODULE_22___default.a.createElement(antd_lib_icon__WEBPACK_IMPORTED_MODULE_13___default.a, {
-          type: "fork",
-          theme: "outlined",
-          style: {
-            marginRight: 5
-          }
-        }), "Sell Orders"), react__WEBPACK_IMPORTED_MODULE_22___default.a.createElement("div", {
-          style: {
-            height: 370,
-            overflow: 'auto'
-          }
-        }, react__WEBPACK_IMPORTED_MODULE_22___default.a.createElement("table", {
-          cellPadding: "0",
-          cellSpacing: "0"
-        }, react__WEBPACK_IMPORTED_MODULE_22___default.a.createElement("tbody", null, react__WEBPACK_IMPORTED_MODULE_22___default.a.createElement("tr", {
-          className: "trrow head"
-        }, react__WEBPACK_IMPORTED_MODULE_22___default.a.createElement("td", null, "Price"), react__WEBPACK_IMPORTED_MODULE_22___default.a.createElement("td", null, "Amout"), react__WEBPACK_IMPORTED_MODULE_22___default.a.createElement("td", null, "Total")), react__WEBPACK_IMPORTED_MODULE_22___default.a.createElement(Selldata, null), react__WEBPACK_IMPORTED_MODULE_22___default.a.createElement("tr", null, react__WEBPACK_IMPORTED_MODULE_22___default.a.createElement("td", {
-          colSpan: "3"
-        }))))))), react__WEBPACK_IMPORTED_MODULE_22___default.a.createElement(antd_lib_col__WEBPACK_IMPORTED_MODULE_5___default.a, {
-          span: 8
-        }, react__WEBPACK_IMPORTED_MODULE_22___default.a.createElement("div", {
-          style: {
-            height: 400,
-            border: 'solid #EEE 1px',
-            textAlign: 'center'
-          }
-        }, react__WEBPACK_IMPORTED_MODULE_22___default.a.createElement("div", {
-          style: {
-            padding: '4px 0',
-            borderBottom: 'solid #1890ff 1px',
-            color: '#1890ff'
-          }
-        }, react__WEBPACK_IMPORTED_MODULE_22___default.a.createElement(antd_lib_icon__WEBPACK_IMPORTED_MODULE_13___default.a, {
-          type: "fork",
-          theme: "outlined",
-          style: {
-            marginRight: 5
-          }
-        }), "Order History"), react__WEBPACK_IMPORTED_MODULE_22___default.a.createElement("div", {
-          style: {
-            height: 370,
-            overflow: 'auto'
-          }
-        }, react__WEBPACK_IMPORTED_MODULE_22___default.a.createElement("table", {
-          cellPadding: "0",
-          cellSpacing: "0"
-        }, react__WEBPACK_IMPORTED_MODULE_22___default.a.createElement("tbody", null, react__WEBPACK_IMPORTED_MODULE_22___default.a.createElement("tr", {
-          className: "trrow head"
-        }, react__WEBPACK_IMPORTED_MODULE_22___default.a.createElement("td", null, "Price"), react__WEBPACK_IMPORTED_MODULE_22___default.a.createElement("td", null, "Amout"), react__WEBPACK_IMPORTED_MODULE_22___default.a.createElement("td", null, "Time")), react__WEBPACK_IMPORTED_MODULE_22___default.a.createElement(Historydata, null), react__WEBPACK_IMPORTED_MODULE_22___default.a.createElement("tr", null, react__WEBPACK_IMPORTED_MODULE_22___default.a.createElement("td", {
-          colSpan: "3"
-        }))))))));
-      }; //  BOTTOM COMPONENT  //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-
-      var Chartbar = function Chartbar(props) {
-        if (_this2.state.piedata) var Piechart = function Piechart() {
-          return react__WEBPACK_IMPORTED_MODULE_22___default.a.createElement(Pie, {
-            data: _this2.state.piedata[props.boxkey],
-            radius: 60,
-            hole: 0,
-            colors: _this2.state.piecolors,
-            strokeWidth: 3,
-            labels: true
-          });
-        };else var Piechart = function Piechart() {
-          return '';
-        };
-        return react__WEBPACK_IMPORTED_MODULE_22___default.a.createElement(antd_lib_row__WEBPACK_IMPORTED_MODULE_3___default.a, {
-          style: {
-            padding: '20px 0'
-          }
-        }, react__WEBPACK_IMPORTED_MODULE_22___default.a.createElement(antd_lib_col__WEBPACK_IMPORTED_MODULE_5___default.a, {
-          span: 7,
-          style: {
-            textAlign: 'center'
-          }
-        }, react__WEBPACK_IMPORTED_MODULE_22___default.a.createElement(Piechart, null)), react__WEBPACK_IMPORTED_MODULE_22___default.a.createElement(antd_lib_col__WEBPACK_IMPORTED_MODULE_5___default.a, {
-          span: 11
-        }, react__WEBPACK_IMPORTED_MODULE_22___default.a.createElement("ul", {
-          style: {
-            height: 27,
-            marginBottom: 0
-          }
-        }, react__WEBPACK_IMPORTED_MODULE_22___default.a.createElement("li", {
-          style: {
-            width: '50%',
-            float: 'left',
-            whiteSpace: 'nowrap',
-            overflow: 'hidden',
-            textOverflow: 'ellipsis'
-          }
-        }, "balance warning"), react__WEBPACK_IMPORTED_MODULE_22___default.a.createElement("li", {
-          style: {
-            width: '50%',
-            float: 'left'
-          }
-        }, react__WEBPACK_IMPORTED_MODULE_22___default.a.createElement(antd_lib_input_number__WEBPACK_IMPORTED_MODULE_1___default.a, {
-          value: _this2.state.balances[props.boxkey],
-          formatter: function formatter(value) {
-            return "$ ".concat(value).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
-          },
-          parser: function parser(value) {
-            return value.replace(/\$\s?|(,*)/g, '');
-          },
-          style: {
-            width: '100%'
-          },
-          size: "small",
-          onChange: function onChange(e) {
-            return _this2.balanceChange(props.boxkey, e);
-          }
-        }))), react__WEBPACK_IMPORTED_MODULE_22___default.a.createElement("ul", {
-          style: {
-            height: 27,
-            marginBottom: 0
-          }
-        }, react__WEBPACK_IMPORTED_MODULE_22___default.a.createElement("li", {
-          style: {
-            width: '50%',
-            float: 'left',
-            whiteSpace: 'nowrap',
-            overflow: 'hidden',
-            textOverflow: 'ellipsis'
-          }
-        }, "ratio warning %"), react__WEBPACK_IMPORTED_MODULE_22___default.a.createElement("li", {
-          style: {
-            width: '50%',
-            float: 'left'
-          }
-        }, react__WEBPACK_IMPORTED_MODULE_22___default.a.createElement(antd_lib_input_number__WEBPACK_IMPORTED_MODULE_1___default.a, {
-          value: _this2.state.ratios[props.boxkey],
-          min: 0,
-          max: 100,
-          formatter: function formatter(value) {
-            return "".concat(value, "%");
-          },
-          parser: function parser(value) {
-            return value.replace('%', '');
-          },
-          step: .1,
-          style: {
-            width: '100%'
-          },
-          size: "small",
-          onChange: function onChange(e) {
-            return _this2.ratioChange(props.boxkey, e);
-          }
-        }))), react__WEBPACK_IMPORTED_MODULE_22___default.a.createElement("ul", {
-          style: {
-            height: 27,
-            marginBottom: 0
-          }
-        }, react__WEBPACK_IMPORTED_MODULE_22___default.a.createElement("li", {
-          style: {
-            width: '50%',
-            float: 'left',
-            whiteSpace: 'nowrap',
-            overflow: 'hidden',
-            textOverflow: 'ellipsis'
-          }
-        }, "API key"), react__WEBPACK_IMPORTED_MODULE_22___default.a.createElement("li", {
-          style: {
-            width: '50%',
-            float: 'left'
-          }
-        }, react__WEBPACK_IMPORTED_MODULE_22___default.a.createElement(antd_lib_input__WEBPACK_IMPORTED_MODULE_17___default.a, {
-          size: "small"
-        }))), react__WEBPACK_IMPORTED_MODULE_22___default.a.createElement("ul", {
-          style: {
-            height: 27,
-            marginBottom: 0
-          }
-        }, react__WEBPACK_IMPORTED_MODULE_22___default.a.createElement("li", {
-          style: {
-            width: '50%',
-            float: 'left',
-            whiteSpace: 'nowrap',
-            overflow: 'hidden',
-            textOverflow: 'ellipsis'
-          }
-        }, "Secret key"), react__WEBPACK_IMPORTED_MODULE_22___default.a.createElement("li", {
-          style: {
-            width: '50%',
-            float: 'left'
-          }
-        }, react__WEBPACK_IMPORTED_MODULE_22___default.a.createElement(antd_lib_input__WEBPACK_IMPORTED_MODULE_17___default.a, {
-          size: "small"
-        }))), react__WEBPACK_IMPORTED_MODULE_22___default.a.createElement(InputGroup, {
-          compact: true
-        }, react__WEBPACK_IMPORTED_MODULE_22___default.a.createElement(antd_lib_input__WEBPACK_IMPORTED_MODULE_17___default.a, {
-          placeholder: _this2.state.parities[props.boxkey].split('/')[0] + ' key',
-          style: {
-            width: '50%'
-          }
-        }), react__WEBPACK_IMPORTED_MODULE_22___default.a.createElement(antd_lib_input__WEBPACK_IMPORTED_MODULE_17___default.a, {
-          placeholder: _this2.state.parities[props.boxkey].split('/')[1] + ' key',
-          style: {
-            width: '50%'
-          }
-        }))), react__WEBPACK_IMPORTED_MODULE_22___default.a.createElement(antd_lib_col__WEBPACK_IMPORTED_MODULE_5___default.a, {
-          span: 6
-        }, react__WEBPACK_IMPORTED_MODULE_22___default.a.createElement(react_minimal_pie_chart__WEBPACK_IMPORTED_MODULE_23___default.a, {
-          style: {
-            width: '55%',
-            margin: 'auto'
-          },
-          data: [{
-            title: 'One',
-            value: 8,
-            color: '#006fc1'
-          }, {
-            title: 'Three',
-            value: 10,
-            color: '#ffc103'
-          }]
-        })));
-      }; //  EXCHANGE BOX  //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-
-      var Exchangebox = function Exchangebox(props) {
-        return react__WEBPACK_IMPORTED_MODULE_22___default.a.createElement(antd_lib_col__WEBPACK_IMPORTED_MODULE_5___default.a, {
-          span: 8,
-          className: "exchangebox"
-        }, react__WEBPACK_IMPORTED_MODULE_22___default.a.createElement("div", null, react__WEBPACK_IMPORTED_MODULE_22___default.a.createElement(Headbar, {
-          exchange: props.exchange,
-          boxkey: props.boxkey
-        }), react__WEBPACK_IMPORTED_MODULE_22___default.a.createElement(Contentbar, {
-          exchange: props.exchange,
-          boxkey: props.boxkey
-        }), react__WEBPACK_IMPORTED_MODULE_22___default.a.createElement(Chartbar, {
-          exchange: props.exchange,
-          boxkey: props.boxkey
-        })));
-      }; ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-      ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-      ////////////////////////////////////////////////                REURN VIEW                  ////////////////////////////////////////////////////////////////
-      ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-      ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-
-      return react__WEBPACK_IMPORTED_MODULE_22___default.a.createElement("div", {
-        style: {
-          padding: 10
-        }
-      }, react__WEBPACK_IMPORTED_MODULE_22___default.a.createElement(antd_lib_row__WEBPACK_IMPORTED_MODULE_3___default.a, null, react__WEBPACK_IMPORTED_MODULE_22___default.a.createElement(Menubar, null)), react__WEBPACK_IMPORTED_MODULE_22___default.a.createElement(antd_lib_row__WEBPACK_IMPORTED_MODULE_3___default.a, {
-        gutter: 6,
-        style: {
-          paddingTop: 5
-        }
+      return react__WEBPACK_IMPORTED_MODULE_22___default.a.createElement("div", null, react__WEBPACK_IMPORTED_MODULE_22___default.a.createElement(antd_lib_row__WEBPACK_IMPORTED_MODULE_5___default.a, null, react__WEBPACK_IMPORTED_MODULE_22___default.a.createElement(Menubar, {
+        current: "exchange"
+      })), react__WEBPACK_IMPORTED_MODULE_22___default.a.createElement(antd_lib_row__WEBPACK_IMPORTED_MODULE_5___default.a, {
+        gutter: 6
       }, this.state.exchangeboxes.map(function (box, i) {
         return react__WEBPACK_IMPORTED_MODULE_22___default.a.createElement(Exchangebox, {
-          key: i,
+          key: i // value props
+          ,
+          boxkey: i,
           exchange: box,
-          boxkey: i
+          parity: _this2.state.parities[i],
+          EPstate: _this2.state[box + _this2.state.parities[i].replace('/', '_')],
+          EPsh: _this2.state[box + _this2.state.parities[i].replace('/', '_') + 'history'] // action props
+          ,
+          boxadd: _this2.boxadd,
+          boxremove: _this2.boxremove,
+          parityChange: _this2.parityChange,
+          exchangeChange: _this2.exchangeChange
         });
       })));
     }
@@ -29427,6 +29092,50 @@ function (_Component) {
 
 
 
+
+var Exchangebox =
+/*#__PURE__*/
+function (_React$Component) {
+  _inherits(Exchangebox, _React$Component);
+
+  function Exchangebox() {
+    _classCallCheck(this, Exchangebox);
+
+    return _possibleConstructorReturn(this, _getPrototypeOf(Exchangebox).apply(this, arguments));
+  }
+
+  _createClass(Exchangebox, [{
+    key: "render",
+    value: function render() {
+      return react__WEBPACK_IMPORTED_MODULE_22___default.a.createElement(antd_lib_col__WEBPACK_IMPORTED_MODULE_7___default.a, {
+        span: 8,
+        className: "exchangebox"
+      }, react__WEBPACK_IMPORTED_MODULE_22___default.a.createElement("div", null, react__WEBPACK_IMPORTED_MODULE_22___default.a.createElement(Headbar, {
+        boxkey: this.props.boxkey,
+        exchange: this.props.exchange,
+        parity: this.props.parity // action props
+        ,
+        boxadd: this.props.boxadd,
+        boxremove: this.props.boxremove,
+        parityChange: this.props.parityChange,
+        exchangeChange: this.props.exchangeChange
+      }), react__WEBPACK_IMPORTED_MODULE_22___default.a.createElement(Contentbar, {
+        boxkey: this.props.boxkey,
+        exchange: this.props.exchange,
+        parity: this.props.parity,
+        EPstate: this.props.EPstate,
+        EPsh: this.props.EPsh
+      }), react__WEBPACK_IMPORTED_MODULE_22___default.a.createElement(Chartbar, {
+        boxkey: this.props.boxkey,
+        exchange: this.props.exchange,
+        parity: this.props.parity,
+        EPstate: this.props.EPstate
+      })));
+    }
+  }]);
+
+  return Exchangebox;
+}(react__WEBPACK_IMPORTED_MODULE_22___default.a.Component);
 
 function getAnglePoint(startAngle, endAngle, radius, x, y) {
   var x1, y1, x2, y2;
@@ -29487,8 +29196,8 @@ var Pie = function Pie(props) {
 
 var Slice =
 /*#__PURE__*/
-function (_React$Component) {
-  _inherits(Slice, _React$Component);
+function (_React$Component2) {
+  _inherits(Slice, _React$Component2);
 
   function Slice() {
     var _getPrototypeOf3;
@@ -29610,7 +29319,7 @@ function (_React$Component) {
 
 /***/ }),
 
-/***/ 3:
+/***/ 20:
 /*!******************************!*\
   !*** multi ./pages/index.js ***!
   \******************************/
@@ -29624,16 +29333,16 @@ return { page: module.exports.default }});
 
 /***/ }),
 
-/***/ "dll-reference dll_5d62d38be3592dca3a42":
+/***/ "dll-reference dll_10edf27d814a728d21af":
 /*!*******************************************!*\
-  !*** external "dll_5d62d38be3592dca3a42" ***!
+  !*** external "dll_10edf27d814a728d21af" ***!
   \*******************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = dll_5d62d38be3592dca3a42;
+module.exports = dll_10edf27d814a728d21af;
 
 /***/ })
 
-},[[3,"static/runtime/webpack.js","styles"]]]));;
+},[[20,"static/runtime/webpack.js","styles"]]]));;
 //# sourceMappingURL=index.js.map

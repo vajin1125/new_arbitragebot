@@ -1,6 +1,6 @@
 body {
     background:#001529;
-    padding:0;
+    padding:0 10px;
     margin:0;
 }
 ul {
@@ -24,7 +24,7 @@ td {
     text-align:center;
 }
 .exchangebox {
-    margin-top:5px;
+    margin-bottom:5px;
 }
 .exchangebox > div {  
     background:#FFF;
